@@ -1,9 +1,9 @@
 {
-    "description": "Buyer codes. entrySecret = HMAC(entryKey, \"evenqueue/entry-secret/v1\" 0x00 || formNonce)[0:16]; recoveryCode = HMAC(entryKey, \"evenqueue/recovery-code/v1\" 0x00 || formNonce)[0:10]; viewKey = HMAC(entrySecret, \"evenqueue/view-key/v1\" 0x00)[0:16]; entrySecretLookup = SHA-256(\"evenqueue/entry-secret-lookup/v1\" 0x00 || entrySecret); viewKeyLookup = SHA-256(\"evenqueue/view-key-lookup/v1\" 0x00 || viewKey); recoveryCodeCheck = HMAC(seriesKey, \"evenqueue/recovery-code-check/v1\" 0x00 || recoveryCode); placeTag = SHA-256(\"evenqueue/place-tag/v1\" 0x00 || viewKey). Texts are Crockford base 32 without separators, zero-padded. Computed independently with Python's standard library. The engine and the public verifier must reproduce every case.",
+    "description": "Buyer codes. entrySecret = HMAC(entryKey, \"evenqueue/entry-secret/v1\" 0x00 || formNonce)[0:16]; recoveryCode = HMAC(entryKey, \"evenqueue/recovery-code/v1\" 0x00 || formNonce)[0:10]; viewKey = HMAC(entrySecret, \"evenqueue/view-key/v1\" 0x00)[0:16]; entrySecretLookup = SHA-256(\"evenqueue/entry-secret-lookup/v1\" 0x00 || entrySecret); viewKeyLookup = SHA-256(\"evenqueue/view-key-lookup/v1\" 0x00 || viewKey); recoveryCodeCheck = HMAC(waitlistKey, \"evenqueue/recovery-code-check/v1\" 0x00 || recoveryCode); placeTag = SHA-256(\"evenqueue/place-tag/v1\" 0x00 || viewKey). Texts are Crockford base 32 without separators, zero-padded. Computed independently with Python's standard library. The engine and the public verifier must reproduce every case.",
     "cases": [
         {
             "entryKey": "f80b28d65b11507ea417711113c878a294a110b9d0a76e2e914decd3ccf28abe",
-            "seriesKey": "af3a133ed139ddef7ce2c48a67ce801917c8d263c77576134b8d98d28106da9d",
+            "waitlistKey": "af3a133ed139ddef7ce2c48a67ce801917c8d263c77576134b8d98d28106da9d",
             "formNonce": "d478ad02adf53ce890c46388988e19c1",
             "entrySecret": "ef351cb77977bbb16303df0a3c627e89",
             "entrySecretText": "XWTHSDVSEYXV2RR3VW53RRKYH4",
@@ -18,7 +18,7 @@
         },
         {
             "entryKey": "a2f0289fa2849ad442bca348c8f046a184ef67d6a87df4609411cee156c561bc",
-            "seriesKey": "621504fcadc527753c09f884e3d266f5d62dbd746f37c87063832a3c9daa234e",
+            "waitlistKey": "621504fcadc527753c09f884e3d266f5d62dbd746f37c87063832a3c9daa234e",
             "formNonce": "1b0b1ab9adbb6ec7de2dc85dcb09c7b0",
             "entrySecret": "283e2790b0cae28032c31f69cf741bc6",
             "entrySecretText": "50Z2F45GSBH80CP33XMWYX0VRR",

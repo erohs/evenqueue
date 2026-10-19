@@ -9,10 +9,10 @@ Build steps for the first beta. Each stage ends with `pnpm check` green; then th
 |                                                        | 1c. Buyer codes and delayed recovery                                        | Done                  |
 |                                                        | 1d. Commitment (waitlist root, public draw ids) and beacon handling         | Done                  |
 |                                                        | 1e. Hash-chained public log                                                 | Done                  |
-|                                                        | 1f. Engine audit: hardening, continuity, hostile and property tests         | Done, awaiting review |
-| 2. Buyer pages and vendor admin                        | 2a. Waitlists and drops: settings, change classes, freeze rules, digest     | Done, awaiting review |
-|                                                        | 2b. Application ports, instance keys, form guard, buyer use cases           | Next                  |
-|                                                        | 2c. Buyer pages: no-JS views, codes and phrase, QR, headers, copy lint      |                       |
+|                                                        | 1f. Engine audit: hardening, continuity, hostile and property tests         | Done                  |
+| 2. Buyer pages and vendor admin                        | 2a. Waitlists and drops: settings, change classes, freeze rules, digest     | Done                  |
+|                                                        | 2b. Application ports, instance keys, form guard, buyer use cases           | Done, awaiting review |
+|                                                        | 2c. Buyer pages: no-JS views, codes and phrase, QR, headers, copy lint      | Next                  |
 |                                                        | 2d. Vendor sign-in: passkeys, one-time-code fallback, sessions, audit       |                       |
 |                                                        | 2e. Vendor admin pages: waitlists, drops, settings, units                   |                       |
 |                                                        | 2f. Stage audit: accessibility, no-JS and hostile-input pass                |                       |
@@ -48,7 +48,7 @@ Build steps for the first beta. Each stage ends with `pnpm check` green; then th
   in groups of four.
 - Codes are derived from the entry key and the signed form's nonce, so a retried form shows the same codes.
 - The store keeps only lookups: a tagged SHA-256 of the entry code and of the view key, and an HMAC of the recovery
-  code under the series key, which never sits in the database.
+  code under the waitlist key, which never sits in the database.
 - Typing accepts any case, spaces, any dash, and O, I or L for 0 and 1. Every code has exactly one spelling.
 - Recovery takes effect after the delay (12 h by default, at least 6 h) or at the next checkpoint, whichever is later.
   The old code works and can cancel until then. A repeated request restarts the delay.
@@ -89,7 +89,7 @@ Build steps for the first beta. Each stage ends with `pnpm check` green; then th
 - Every time, count and duration is checked as a safe whole number, so NaN, infinities, fractions and unsafe
   integers are refused everywhere. Guards fail closed: a corrupt recovery time keeps the current codes.
 - Fixed: duplicate entrants, units or places in draws and offers; a slice re-run, or one place under two ids across
-  slices; negative-zero priorities; short entry and series keys; oversized typed codes; full-width characters in
+  slices; negative-zero priorities; short entry and waitlist keys; oversized typed codes; full-width characters in
   codes; duplicate or differently spelled beacon endpoints and attesters; a void while an endpoint had served the
   round; a repeated recovery request bringing the swap forward or skipping the six-hour minimum; malformed log
   entries, proofs and leaves from a hostile server crashing the verifier.
@@ -134,3 +134,26 @@ Build steps for the first beta. Each stage ends with `pnpm check` green; then th
   first.
 - Payment settings (price, minimum payment, retire or return after a refund) arrive with redemption in step 4, and
   the redemption route, duplicate flag and anchoring settings with the steps that build them, each with a change class.
+
+## Stage 2b notes: application layer
+
+- Ports: a waitlist store (waitlists, drops, outages), a place store, a clock, a random source and a key store. Each
+  use case takes only the services it uses. In-memory adapters serve the tests; a system clock and WebCrypto random
+  source serve both targets.
+- Keys: a 256-bit root key is made on first start and kept in the key store, outside the database. The entry-codes and
+  form-guard keys, and each waitlist's key from its own salt, are derived with HKDF-SHA-256 through WebCrypto.
+  `tests/vectors/serverKeys.json` is computed independently with Python. The series key is now called the waitlist
+  key throughout.
+- Form guard: every entry and recovery form carries a signed token naming its purpose, waitlist, nonce and time, plus
+  a hidden field. A token sent within 3 s, older than a day, forged, for the other form or another waitlist, or a
+  filled hidden field all lead to "confirm again" with a fresh form, never a refusal. A plain form posted from a
+  vendor's own site has no token, so it gets the same confirm step.
+- Joining derives the codes and the place id from the form's nonce, so a resent form shows the same codes and adds no
+  second place; if a recovery has since replaced those codes, it says so instead of showing them. Joining needs the
+  drop open and inside its entry window's uptime, and a waitlist under its entrant cap.
+- Status takes an entry code or a view key in one field; withdrawal and cancelling a recovery need the entry code.
+  Every lookup applies a recovery that has come due before deciding whether the code is in force, so a replaced code
+  stops and the new one starts on time even if no timer has run.
+- Recovery takes effect after the 12 h delay. Using the next checkpoint when that is later waits for stored draw times
+  (step 3), as do the public recovery log entry and rate limits (2c).
+- Benchmarks: reading the form token 0.08 ms, deriving the waitlist key 0.08 ms, issuing codes 0.43 ms.

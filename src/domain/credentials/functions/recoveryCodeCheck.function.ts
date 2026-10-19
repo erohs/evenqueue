@@ -5,8 +5,8 @@ import { credentialDerivationTags } from "../consts/credentialDerivationTags.con
 import type { ServerKey } from "../types/ServerKey.type.ts";
 
 /**
- * Keyed with the series key, which never sits in the database: 80 bits is too few to survive offline search of a
- * plain hash. Deleting the series key makes every stored check unmatchable.
+ * Keyed with the waitlist key, which never sits in the database: 80 bits is too few to survive offline search of a
+ * plain hash. Deleting the waitlist key makes every stored check unmatchable.
  */
-export const recoveryCodeCheck = (seriesKey: ServerKey, recoveryCode: ByteArray): Promise<Bytes32Hex> =>
-    hmacSha256Hex(seriesKey, credentialDerivationTags.recoveryCodeCheck, recoveryCode);
+export const recoveryCodeCheck = (waitlistKey: ServerKey, recoveryCode: ByteArray): Promise<Bytes32Hex> =>
+    hmacSha256Hex(waitlistKey, credentialDerivationTags.recoveryCodeCheck, recoveryCode);

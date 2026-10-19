@@ -35,6 +35,7 @@ src/
       bytes/  counting/  time/  parsing/  ordering/  text/
     waitlist/              a vendor's waitlist and a buyer's place on it
     drops/                 one release of units: its states, settings and when each setting may change
+    form-guard/            signed time-trap tokens for the entry and recovery forms
     allocation-rules/      who is offered first, and what happens to a place after a drop
     draw/                  ordering a draw from public inputs: tiebreak key, ranking, slices
     schedule/              windows measured in uptime, check-in times (checkpoints)
@@ -44,18 +45,21 @@ src/
     beacon/                the pinned drand chain, round times, reading endpoints, waiting rules
     public-log/            canonical JSON, the hash-chained log, checkpoints
     continuity/            snapshots and restoring places after a move, outage or lost database
-  application/             #application: one folder per thing a person or a timer does   (later, 2)
-    ports/interfaces/      IWaitlistStore, IClock, IBeaconSource, IKeyStore, IRateLimiter
-    join-waitlist/  check-status/  claim-offer/  run-draw/  ...
-  adapters/                #adapters: one folder per outside system, implementing ports  (later, 3)
-    cloudflare-d1/  cloudflare-kv/  node-sqlite/  drand-http/  in-memory/
+  application/             #application: one folder per thing a person or a timer does
+    ports/                 what use cases need from outside: stores, clock, random source, keys
+    shared/                purpose-named helpers for several use cases: place-lookup/  form-checks/
+    instance-keys/         the root key and every key derived from it
+    join-waitlist/  check-status/  withdraw-place/  request-recovery/  cancel-recovery/  ...
+  adapters/                #adapters: one folder per outside system, implementing ports
+    in-memory/  web-platform/        cloudflare-d1/  cloudflare-kv/  node-sqlite/  drand-http/  (later, 3)
   web/                     #web: routes/, views/, styles/                         (later, 2)
   entry-points/            cloudflare-worker/main.ts, node-server/main.ts, verifier-cli/main.ts  (later)
 tests/                     #tests
   support/                 shared fixtures
   vectors/                 JSON vectors shared with the verifier and the WooCommerce connector
   hostile-input/  properties/  scenarios/
-  contracts/  e2e/         one store contract run against every adapter; Playwright   (later)
+  contracts/               one store contract run against every adapter
+  e2e/                     Playwright, JavaScript on and off                            (later, 2c)
 tools/file-layout/         the layout check behind `pnpm lint:files`
 tools/benchmarks/          `pnpm bench`: hot paths against the 10 ms request budget
 docs/decisions.md          decisions the code cannot explain

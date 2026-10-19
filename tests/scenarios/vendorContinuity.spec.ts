@@ -17,9 +17,9 @@ import { toEpochMilliseconds } from "#domain/shared/time/functions/toEpochMillis
 import { createWaitlistPlace } from "#domain/waitlist/functions/createWaitlistPlace.function.ts";
 
 const draw = await publishedDrawForTests([2, 2, 1, 0]);
-const oldSeriesKey = toServerKey(decodeHex(deterministicBytes32Hex("old-series-key")));
-const newSeriesKey = toServerKey(decodeHex(deterministicBytes32Hex("new-series-key")));
-const storedOnOldHost = await Promise.all(draw.buyers.map((buyer) => storedFormOfCredentials(buyer, oldSeriesKey)));
+const oldWaitlistKey = toServerKey(decodeHex(deterministicBytes32Hex("old-waitlist-key")));
+const newWaitlistKey = toServerKey(decodeHex(deterministicBytes32Hex("new-waitlist-key")));
+const storedOnOldHost = await Promise.all(draw.buyers.map((buyer) => storedFormOfCredentials(buyer, oldWaitlistKey)));
 const snapshot: IWaitlistSnapshot = {
     formatVersion: 1,
     allocationRuleId: "priority-after-losses",
@@ -48,10 +48,10 @@ describe("Using the engine, when a vendor moves to a new host and domain with a 
 });
 
 describe("Using the engine, when a vendor loses its keys as well as its host", () => {
-    test("then recovery codes should stop matching, which is why the series key needs its own backup", async () => {
+    test("then recovery codes should stop matching, which is why the waitlist key needs its own backup", async () => {
         const buyer = draw.buyers[0] ?? assert.fail();
         assert.notEqual(
-            await recoveryCodeCheck(newSeriesKey, buyer.recoveryCode),
+            await recoveryCodeCheck(newWaitlistKey, buyer.recoveryCode),
             storedOnOldHost[0]?.recoveryCodeCheck,
         );
     });
@@ -109,7 +109,7 @@ describe("Using the engine, for continuity work in later steps", () => {
     test.todo("step 3: a nightly snapshot can be downloaded by the vendor and holds no codes and no keys");
     test.todo("step 3: a snapshot exported from Workers with D1 imports into Node with SQLite, and back");
     test.todo("step 3: the store refuses a second place with the same entry code, so a code cannot restore twice");
-    test.todo("step 3: the series key backup restores recovery codes on a new host");
+    test.todo("step 3: the waitlist key backup restores recovery codes on a new host");
     test.todo("step 4: the WooCommerce connector re-pairs after a domain change and old signed links stop working");
     test.todo("step 5: the verifier checks halt-attestation signatures before it accepts a void");
     test.todo("step 6: the old domain can show a plain notice of where the waitlist moved, with no code in any URL");

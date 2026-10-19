@@ -4,7 +4,7 @@ import type { Bytes32Hex } from "#domain/shared/bytes/types/Bytes32Hex.type.ts";
 export interface IStoredCredentials {
     readonly entrySecretLookup: Bytes32Hex;
     readonly viewKeyLookup: Bytes32Hex;
-    /** Keyed with the series key, because the recovery code is too short for a plain hash. */
+    /** Keyed with the waitlist key, because the recovery code is too short for a plain hash. */
     readonly recoveryCodeCheck: Bytes32Hex;
     /**
      * Derived from the current view key and replaced with the codes on recovery. A published recovery links the old

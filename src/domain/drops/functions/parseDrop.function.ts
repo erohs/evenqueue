@@ -1,4 +1,5 @@
 import { isBytes32Hex } from "#domain/shared/bytes/functions/isBytes32Hex.function.ts";
+import { isCount } from "#domain/shared/counting/functions/isCount.function.ts";
 import { isRecord } from "#domain/shared/parsing/functions/isRecord.function.ts";
 import { parsedFields } from "#domain/shared/parsing/functions/parsedFields.function.ts";
 import type { ParseResult } from "#domain/shared/parsing/types/ParseResult.type.ts";
@@ -12,6 +13,7 @@ type DropFields = Omit<IDrop, "settings" | "settingsNotice">;
 const dropFieldGuards = {
     dropId: isBytes32Hex,
     waitlistId: isBytes32Hex,
+    entryWindowNumber: isCount,
     state: isDropState,
     openedAt: (field: unknown) => field === null || isEpochMilliseconds(field),
 };

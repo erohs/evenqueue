@@ -8,10 +8,10 @@ import { viewKeyLookup } from "./viewKeyLookup.function.ts";
 
 export const storedFormOfCredentials = async (
     issued: IIssuedCredentials,
-    seriesKey: ServerKey,
+    waitlistKey: ServerKey,
 ): Promise<IStoredCredentials> => ({
     entrySecretLookup: await entrySecretLookup(issued.entrySecret),
     viewKeyLookup: await viewKeyLookup(issued.viewKey),
-    recoveryCodeCheck: await recoveryCodeCheck(seriesKey, issued.recoveryCode),
+    recoveryCodeCheck: await recoveryCodeCheck(waitlistKey, issued.recoveryCode),
     placeTag: await derivePlaceTag(issued.viewKey),
 });

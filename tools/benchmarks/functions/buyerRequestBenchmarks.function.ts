@@ -6,9 +6,11 @@ import { storedFormOfCredentials } from "#domain/credentials/functions/storedFor
 import { toFormNonce } from "#domain/credentials/functions/toFormNonce.function.ts";
 import type { IBenchmark } from "../interfaces/IBenchmark.ts";
 import type { IBenchmarkFixtures } from "../interfaces/IBenchmarkFixtures.ts";
+import { joinBenchmarks } from "./joinBenchmarks.function.ts";
 
 /** Work done while a buyer waits, which must fit the 10 ms CPU budget of a Workers Free request. */
 export const buyerRequestBenchmarks = (fixtures: IBenchmarkFixtures): IBenchmark[] => [
+    ...joinBenchmarks(fixtures),
     {
         name: "join: issue codes and their stored form",
         runsOn: "buyer request",
@@ -16,7 +18,7 @@ export const buyerRequestBenchmarks = (fixtures: IBenchmarkFixtures): IBenchmark
         operation: async () =>
             storedFormOfCredentials(
                 await issueBuyerCredentials(fixtures.entryKey, toFormNonce(new Uint8Array(randomBytes(16)))),
-                fixtures.seriesKey,
+                fixtures.waitlistKey,
             ),
     },
     {

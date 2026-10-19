@@ -80,12 +80,32 @@ The lower bounds on the windows (24 hours to join, 12 to claim) are there for bu
 access, who lose out under short windows; the offer window's upper bound of five days is the shortest time a card
 payment stays valid.
 
+## Every key comes from one root key
+
+A 256-bit root key is made on first start and kept outside the database; the entry-codes key, the form-guard key and
+each waitlist's key are derived from it with HKDF-SHA-256 and the info `evenqueue/server-key/<purpose>/v1`, a
+waitlist's key with its own random salt. So a vendor never types a key, a database export never holds one, and
+backing up the root key and the salts backs up every key. Deleting a waitlist's salt makes its recovery checks
+unmatchable for good. Changing the derivation would break every stored recovery check, so it is pinned by vectors.
+
+## A form check that fails asks the buyer to confirm, never turns them away
+
+A form sent too quickly, an expired or missing token, or a filled hidden field all show a fresh form to confirm.
+Autofill, screen readers and fast hands can trip any of these, and the people this serves must never be locked out by
+a bot check. The checks only cost scripts a second round trip; resistance to guessing rests on the codes' length.
+
+## A form's nonce names the place as well as the codes
+
+The place id is derived from the form's nonce under the entry key, like the codes. A resent form therefore names the
+same place and can never add a second one, even after a recovery has replaced the codes it first showed; in that case
+the buyer is told the codes were replaced rather than shown codes that no longer work.
+
 ## A vendor's failure never costs a buyer their place
 
 - An offer the vendor withdraws, or that lapses because outages ran past the window's extension limit, counts as
   `offer-withdrawn`: the same as not being offered, under every rule.
 - A snapshot holds places, stored lookups and the public log, but no codes and no keys. Entry codes and view keys are
-  looked up by unkeyed hashes, so they keep working on any host or domain. Recovery codes need the series key, which
+  looked up by unkeyed hashes, so they keep working on any host or domain. Recovery codes need the waitlist key, which
   needs its own backup.
 - With no snapshot, a buyer's entry code alone restores their place from the last published draw, at the published
   priority. A place offered a unit in that draw is held for the vendor to check against sales, because the public

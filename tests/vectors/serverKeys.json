@@ -1,0 +1,26 @@
+{
+    "description": "Server keys. key = HKDF-SHA-256 (RFC 5869) of the root key, with the salt given (empty for instance-wide keys) and info \"evenqueue/server-key/<purpose>/v1\", 32 bytes. Computed independently with Python's standard library. Changing the derivation would make every stored recovery check unmatchable.",
+    "rootKey": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+    "cases": [
+        {
+            "purpose": "entry-codes",
+            "salt": "",
+            "key": "59ab3f465af771169c30f64d498cacdca5be0b33c21ec9944fd5b108548e9ea3"
+        },
+        {
+            "purpose": "form-guard",
+            "salt": "",
+            "key": "aea17538b76f90216013c2a63e7fc7d9ebb98e3f82806b581c2845a28efe0aa7"
+        },
+        {
+            "purpose": "waitlist",
+            "salt": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "key": "28e573ad72a25318423d5ebef57fee86f8eb624315e5dc34c9c617213e9e3bc5"
+        },
+        {
+            "purpose": "waitlist",
+            "salt": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+            "key": "3b36ca2f3f9cecd894c19f7bcaefd79d57fd4a1e31a2ff3db93d5c15d9ef6eb9"
+        }
+    ]
+}
