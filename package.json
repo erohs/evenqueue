@@ -23,6 +23,7 @@
         "format": "prettier --write .",
         "test": "node --test \"src/**/tests/*.spec.ts\" \"tests/hostile-input/*.spec.ts\" \"tests/properties/*.spec.ts\" \"tests/scenarios/*.spec.ts\" \"tests/contracts/*.spec.ts\"",
         "bench": "node tools/benchmarks/main.ts",
+        "dev": "node src/entry-points/dev-server/main.ts",
         "check": "pnpm typecheck && pnpm lint && pnpm test"
     },
     "devDependencies": {

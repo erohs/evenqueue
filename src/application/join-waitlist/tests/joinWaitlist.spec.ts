@@ -97,13 +97,13 @@ describe("Using joinWaitlist, given an open drop, when a plain form from the ven
     });
 });
 
-describe("Using joinWaitlist, given a drop that has not opened", () => {
-    test("then it should say entry is closed", async () => {
+describe("Using joinWaitlist, given a drop that is still a draft", () => {
+    test("then it should treat it as not found, because buyers never see a draft", async () => {
         const services = await createTestServices();
         const formToken = await issueFormToken(services, "join-waitlist", services.draftDrop.waitlistId);
         services.clock.advanceBy(5_000);
         const outcome = await joinWaitlist(services, { dropId: services.draftDrop.dropId, formToken, honeypot: "" });
-        assert.equal(outcome.kind, "entry-closed");
+        assert.equal(outcome.kind, "drop-not-found");
     });
 });
 

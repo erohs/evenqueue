@@ -100,6 +100,14 @@ The place id is derived from the form's nonce under the entry key, like the code
 same place and can never add a second one, even after a recovery has replaced the codes it first showed; in that case
 the buyer is told the codes were replaced rather than shown codes that no longer work.
 
+## The buyer pages need no framework and no script
+
+The web layer is one function from a web-standard `Request` to a `Response`, with a small route table, so the same
+code runs on Workers and Node and no framework needs upkeep. Pages are written only through an escaping `html`
+template, and every page sends a Content-Security-Policy with no script source, so a page that needed JavaScript
+would visibly fail rather than half-work. Every page is `no-store`, because each carries either codes or a form token,
+and a cached token would give two buyers the same codes.
+
 ## A vendor's failure never costs a buyer their place
 
 - An offer the vendor withdraws, or that lapses because outages ran past the window's extension limit, counts as

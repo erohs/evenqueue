@@ -75,7 +75,8 @@ import names the file exactly, extension included, because Node runs the TypeScr
 
 **Layers** _(lint)_: entry points → web → application → domain, with adapters implementing application ports. The
 domain imports only `#domain`; application imports `#domain` and its ports; adapters import `#domain` and
-`#application` ports; web imports `#application`. Runtime code never imports `node:` built-ins or `#tests`.
+`#application` ports; web imports `#application`, and `#domain` only for types and pure helpers such as formatting a
+code. Runtime code never imports `node:` built-ins or `#tests`.
 
 ## Comments
 

@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
 import { createInMemoryKeyStore } from "#adapters/in-memory/functions/createInMemoryKeyStore.function.ts";
+import { createInMemoryRateLimiter } from "#adapters/in-memory/functions/createInMemoryRateLimiter.function.ts";
 import { createInMemoryPlaceStore } from "#adapters/in-memory/functions/createInMemoryPlaceStore.function.ts";
 import { createInMemoryWaitlistStore } from "#adapters/in-memory/functions/createInMemoryWaitlistStore.function.ts";
 import { createWaitlistKeySalt } from "#application/instance-keys/functions/createWaitlistKeySalt.function.ts";
@@ -21,6 +22,7 @@ export const createTestServices = async (settings: Partial<IDropSettings> = {}):
     const keyStore = createInMemoryKeyStore();
     const random = createSeededRandomSource(5);
     await createWaitlistKeySalt(keyStore, random, waitlist.waitlistId);
+    const clock = createSettableClock(opened.openedAt ?? assert.fail("an open drop has an opening time"));
     return {
         waitlists: createInMemoryWaitlistStore({
             waitlists: [waitlist],
@@ -28,7 +30,8 @@ export const createTestServices = async (settings: Partial<IDropSettings> = {}):
             serviceGaps: [],
         }),
         places: createInMemoryPlaceStore(),
-        clock: createSettableClock(opened.openedAt ?? assert.fail("an open drop has an opening time")),
+        clock,
+        rateLimiter: createInMemoryRateLimiter(clock),
         random,
         keys: await loadInstanceKeys(keyStore, random),
         openDrop,

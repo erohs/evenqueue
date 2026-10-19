@@ -11,11 +11,12 @@ Build steps for the first beta. Each stage ends with `pnpm check` green; then th
 |                                                        | 1e. Hash-chained public log                                                 | Done                  |
 |                                                        | 1f. Engine audit: hardening, continuity, hostile and property tests         | Done                  |
 | 2. Buyer pages and vendor admin                        | 2a. Waitlists and drops: settings, change classes, freeze rules, digest     | Done                  |
-|                                                        | 2b. Application ports, instance keys, form guard, buyer use cases           | Done, awaiting review |
-|                                                        | 2c. Buyer pages: no-JS views, codes and phrase, QR, headers, copy lint      | Next                  |
-|                                                        | 2d. Vendor sign-in: passkeys, one-time-code fallback, sessions, audit       |                       |
-|                                                        | 2e. Vendor admin pages: waitlists, drops, settings, units                   |                       |
-|                                                        | 2f. Stage audit: accessibility, no-JS and hostile-input pass                |                       |
+|                                                        | 2b. Application ports, instance keys, form guard, buyer use cases           | Done                  |
+|                                                        | 2c. Buyer pages: web layer, no-JS views, headers, rate limits, copy check   | Done, awaiting review |
+|                                                        | 2d. Code artefacts and browser checks: QR, phrase, sheet, .ics, Playwright  | Next                  |
+|                                                        | 2e. Vendor sign-in: passkeys, one-time-code fallback, sessions, audit       |                       |
+|                                                        | 2f. Vendor admin pages: waitlists, drops, settings, units                   |                       |
+|                                                        | 2g. Stage audit: accessibility, no-JS and hostile-input pass                |                       |
 | 3. Targets: Workers with D1, Node with SQLite          |                                                                             |                       |
 | 4. Redemption: WooCommerce connector, signed links     |                                                                             |                       |
 | 5. Public verifier                                     |                                                                             |                       |
@@ -157,3 +158,27 @@ Build steps for the first beta. Each stage ends with `pnpm check` green; then th
 - Recovery takes effect after the 12 h delay. Using the next checkpoint when that is later waits for stored draw times
   (step 3), as do the public recovery log entry and rate limits (2c).
 - Benchmarks: reading the form token 0.08 ms, deriving the waitlist key 0.08 ms, issuing codes 0.43 ms.
+
+## Stage 2c notes: buyer pages
+
+- The web layer is one web-standard handler (`Request` in, `Response` out) with a small route table, so Workers and
+  Node serve the same code with no framework. Pages: the drop page, joining (codes shown once, or a confirm step),
+  status by entry code or view key, leaving (asked once), replacing a lost entry code, cancelling new codes, and
+  finishing, which sends `Clear-Site-Data: "cache"`.
+- Pages are written only through the `html` template, which escapes every value; markup it did not make is refused,
+  so it cannot be forged. Vendor text is shown as plain paragraphs.
+- Every page sends `no-store` (pages carry codes or a form token), a CSP with no script source at all, no referrer and
+  `nosniff`. Only the drop page, the confirm step and the codes page after joining may be framed, and only by the
+  drop's embed origins.
+- Codes travel only in form bodies, never in an address. Code fields accept paste, case, spaces, dashes and look-alike
+  letters; the entry-code fields are marked up for password managers, with the waitlist label as the user name.
+- Rate limits per client address: 60 joins and 30 code lookups a minute, sized for a shared building; past them a
+  static page with `Retry-After: 60`. The address comes from the platform, never from a forwarded header.
+- Styles are plain CSS files served beside the pages: tokens in `light-dark()` pairs, so the theme follows the
+  system with no script, plus forced-colours, more-contrast, reduced-motion and print rules.
+- Checks: a scripted visit with JavaScript off walks every page and confirms that none has a script, every page has
+  a language and one main heading, every visible field has a label, no page uses a gambling word and every page is
+  `no-store`. `pnpm dev` serves an in-memory demo. Pages were screenshotted in light and dark with headless Edge;
+  axe, keyboard and phone-width checks come with Playwright in 2d.
+- Next checkpoint times, offers and claiming arrive with stored draws (step 3) and redemption (step 4); the vendor's
+  own time zone arrives with the admin pages. Times show in UTC until then.

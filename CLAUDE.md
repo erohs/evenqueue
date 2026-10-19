@@ -52,8 +52,12 @@ src/
     join-waitlist/  check-status/  withdraw-place/  request-recovery/  cancel-recovery/  ...
   adapters/                #adapters: one folder per outside system, implementing ports
     in-memory/  web-platform/        cloudflare-d1/  cloudflare-kv/  node-sqlite/  drand-http/  (later, 3)
-  web/                     #web: routes/, views/, styles/                         (later, 2)
-  entry-points/            cloudflare-worker/main.ts, node-server/main.ts, verifier-cli/main.ts  (later)
+  web/                     #web: the buyer pages as one Request-to-Response handler
+    html/  http/           the escaping template; headers, form reading
+    views/  routes/        pages; the route table and one handler per route
+    styles/                tokens.css and buyer.css, served beside the pages
+  entry-points/            dev-server/main.ts (`pnpm dev`, in memory); cloudflare-worker/, node-server/,
+                           verifier-cli/ (later)
 tests/                     #tests
   support/                 shared fixtures
   vectors/                 JSON vectors shared with the verifier and the WooCommerce connector

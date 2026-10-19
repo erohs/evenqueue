@@ -10,6 +10,8 @@ export type CheckStatusOutcome =
           readonly access: CodeAccess;
           readonly place: IWaitlistPlace;
           readonly recoveryTakesEffectAt: EpochMilliseconds | null;
+          /** Null until the drop opens. */
+          readonly entryClosesAt: EpochMilliseconds | null;
       } & IDropWithWaitlist)
     | { readonly kind: "code-not-recognised" }
     | { readonly kind: "drop-not-found" };

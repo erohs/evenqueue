@@ -1,0 +1,47 @@
+/*
+ * Every design value lives here, so a vendor restyles the pages by overriding these and nothing else. Colours are
+ * light-dark() pairs: the pages follow the system theme with no script. Each text and background pair meets
+ * WCAG 2.2 AA in both themes.
+ */
+:root {
+    color-scheme: light dark;
+
+    --color-background: light-dark(#f7f6f2, #151617);
+    --color-surface: light-dark(#ffffff, #1f2123);
+    --color-text: light-dark(#1d1f21, #ecebe8);
+    --color-text-muted: light-dark(#4b5156, #b4b8bc);
+    --color-border: light-dark(#d3d1c9, #3c3f42);
+    --color-accent: light-dark(#1e5148, #8ccfbe);
+    --color-on-accent: light-dark(#ffffff, #0f1f1b);
+    --color-warning-surface: light-dark(#fff4d6, #33290f);
+    --color-warning-border: light-dark(#9a6c00, #e0b543);
+    --color-error: light-dark(#a3201b, #ff9a92);
+    --color-focus: light-dark(#0b57d0, #9ec2ff);
+
+    --font-family-body: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    --font-family-code: ui-monospace, "SF Mono", "Cascadia Mono", Consolas, "Liberation Mono", monospace;
+    --font-size-body: 1.0625rem;
+    --font-size-small: 0.9375rem;
+    --font-size-subheading: 1.25rem;
+    --font-size-heading: 1.75rem;
+    --font-size-code: 1.25rem;
+    --line-height-body: 1.6;
+    --line-height-heading: 1.25;
+
+    --space-inside: 1rem;
+    --space-between-content: 1.25rem;
+    --space-between-sections: 2.5rem;
+    --width-content: 40rem;
+
+    --border-width: 1px;
+    --border-width-strong: 2px;
+    --border-width-focus: 3px;
+    --radius: 8px;
+}
+
+@media (prefers-contrast: more) {
+    :root {
+        --color-text-muted: var(--color-text);
+        --color-border: var(--color-text);
+    }
+}
