@@ -35,7 +35,7 @@ src/
     draw/                  ordering a draw from public inputs: tiebreak key, ranking, slices
     schedule/              windows measured in uptime, check-in times (checkpoints)
     offers/                unit states, offers and backfill
-    credentials/           buyer codes, delayed recovery                         (later, 1c)
+    credentials/           buyer codes, delayed recovery
     commitment/  beacon/   waitlist root, public draw ids, beacon rounds         (later, 1d)
     public-log/            hash chain                                            (later, 1e)
   application/             #application: one folder per thing a person or a timer does   (later, 2)

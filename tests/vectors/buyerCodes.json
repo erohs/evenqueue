@@ -1,0 +1,33 @@
+{
+    "description": "Buyer codes. entrySecret = HMAC(entryKey, \"evenqueue/entry-secret/v1\" 0x00 || formNonce)[0:16]; recoveryCode = HMAC(entryKey, \"evenqueue/recovery-code/v1\" 0x00 || formNonce)[0:10]; viewKey = HMAC(entrySecret, \"evenqueue/view-key/v1\" 0x00)[0:16]; entrySecretLookup = SHA-256(\"evenqueue/entry-secret-lookup/v1\" 0x00 || entrySecret); viewKeyLookup = SHA-256(\"evenqueue/view-key-lookup/v1\" 0x00 || viewKey); recoveryCodeCheck = HMAC(seriesKey, \"evenqueue/recovery-code-check/v1\" 0x00 || recoveryCode). Texts are Crockford base 32 without separators, zero-padded. Computed independently with Python's standard library. The engine and the public verifier must reproduce every case.",
+    "cases": [
+        {
+            "entryKey": "f80b28d65b11507ea417711113c878a294a110b9d0a76e2e914decd3ccf28abe",
+            "seriesKey": "af3a133ed139ddef7ce2c48a67ce801917c8d263c77576134b8d98d28106da9d",
+            "formNonce": "d478ad02adf53ce890c46388988e19c1",
+            "entrySecret": "ef351cb77977bbb16303df0a3c627e89",
+            "entrySecretText": "XWTHSDVSEYXV2RR3VW53RRKYH4",
+            "viewKey": "a23d01fd26888c2955fc0ca51cee9f7c",
+            "viewKeyText": "M8YG3Z96H262JNFW1JJHSVMZFG",
+            "recoveryCode": "cd08ac8a4ecb9bb16506",
+            "recoveryCodeText": "SM4AS2JESEDV2S86",
+            "entrySecretLookup": "5ff3d046eaa4013918bb8213797b7649d4e8d783cc362db285fe97e95057b37f",
+            "viewKeyLookup": "058b146c7d0e12c7accdf64f1c3cebc38e7dd24277c6314b0e22b2aa7b869b52",
+            "recoveryCodeCheck": "ed51004dbcd2be4bf5eb6f36aea6ad8913caf65af2bd522f8214783635c51f29"
+        },
+        {
+            "entryKey": "a2f0289fa2849ad442bca348c8f046a184ef67d6a87df4609411cee156c561bc",
+            "seriesKey": "621504fcadc527753c09f884e3d266f5d62dbd746f37c87063832a3c9daa234e",
+            "formNonce": "1b0b1ab9adbb6ec7de2dc85dcb09c7b0",
+            "entrySecret": "283e2790b0cae28032c31f69cf741bc6",
+            "entrySecretText": "50Z2F45GSBH80CP33XMWYX0VRR",
+            "viewKey": "303b65b3704214100a5ecaf9ab72ea34",
+            "viewKeyText": "60XPBCVG88A102JYSBWTPWQA6G",
+            "recoveryCode": "de4f4ef94a4dad8f9228",
+            "recoveryCodeText": "VS7MXYAA9PPRZ4H8",
+            "entrySecretLookup": "8b3a98d606886c4ca1cff1a925175d8a8104be455224ec94b073c550b29d770a",
+            "viewKeyLookup": "f1ea0a57304cc7d4ca9b98e090bae56e5f36604fc31184b3c1838c5d0d206cf0",
+            "recoveryCodeCheck": "46d1f23455c172009fab9938cb1388b73379eb668eedc0a9b88a0562000e198e"
+        }
+    ]
+}
