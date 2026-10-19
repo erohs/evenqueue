@@ -1,0 +1,36 @@
+{
+    "name": "evenqueue",
+    "version": "0.0.0",
+    "description": "A privacy-first fair waitlist for DIY and community vendors: no account, no personal data, no JavaScript needed to enter.",
+    "license": "MIT",
+    "private": true,
+    "type": "module",
+    "packageManager": "pnpm@12.8.1",
+    "engines": {
+        "node": ">=24.16.0"
+    },
+    "imports": {
+        "#domain/*": "./src/domain/*",
+        "#application/*": "./src/application/*",
+        "#adapters/*": "./src/adapters/*",
+        "#web/*": "./src/web/*",
+        "#tests/*": "./tests/*"
+    },
+    "scripts": {
+        "typecheck": "tsc --noEmit",
+        "lint:files": "node tools/file-layout/main.ts",
+        "lint": "eslint . && prettier --check . && pnpm lint:files",
+        "format": "prettier --write .",
+        "test": "node --test \"src/**/tests/*.spec.ts\"",
+        "check": "pnpm typecheck && pnpm lint && pnpm test"
+    },
+    "devDependencies": {
+        "@tsconfig/strictest": "2.0.8",
+        "@types/node": "24.19.1",
+        "eslint": "10.12.0",
+        "prettier": "3.9.9",
+        "typescript": "6.0.3",
+        "typescript-eslint": "8.71.0"
+    },
+    "repository": "github:erohs/evenqueue"
+}

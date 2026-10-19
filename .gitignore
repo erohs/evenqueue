@@ -1,0 +1,31 @@
+# Dependencies
+node_modules/
+.pnpm-store/
+
+# Build output
+dist/
+.wrangler/
+*.tsbuildinfo
+
+# Test and coverage output
+coverage/
+playwright-report/
+test-results/
+
+# Environment files (`.env.example` is committed). Never commit keys or secrets.
+.env
+.env.*
+!.env.example
+.dev.vars
+
+# Working notes and subagent findings, written as they work
+notes/
+
+# Editor and OS
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+
+# Local tool overrides
+.claude/settings.local.json

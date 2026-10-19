@@ -1,0 +1,11 @@
+{
+    "description": "SHA-256(\"evenqueue/random-tiebreak-key/v1\" 0x00 || beaconRandomness || committedWaitlistRoot || publicDrawId). Computed independently with Node's crypto. The engine, the public verifier and the WooCommerce connector must all reproduce every case.",
+    "cases": [
+        {
+            "beaconRandomness": "934990a4eb07db5b5640a158fdfcf9d69916340353527dbb9abe018028207dba",
+            "committedWaitlistRoot": "9d60044c9b4ff15d9d3ff35c60708ab0e4c388d60bb96a0b552242687e1c9765",
+            "publicDrawId": "6fb0aa92c4a71ee35f4e02030f6edd4e717cb582055b7218cfa524d23be2c4e0",
+            "expectedKey": "fc47f944ec692e5a6d71fd021a0ee3a5106ae5fcdd539c8b109012870fdb002c"
+        }
+    ]
+}
