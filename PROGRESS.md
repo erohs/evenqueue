@@ -7,9 +7,10 @@ Build steps for the first beta. Each stage ends with `pnpm check` green; then th
 | 1. Engine core                                         | 1a. Scaffold, conventions, allocation rules, tiebreak key, ordering, slices | Done                  |
 |                                                        | 1b. Entry and offer windows, checkpoints, offers and backfill               | Done                  |
 |                                                        | 1c. Buyer codes and delayed recovery                                        | Done                  |
-|                                                        | 1d. Commitment (waitlist root, public draw ids) and beacon handling         | Done, awaiting review |
-|                                                        | 1e. Hash-chained public log                                                 | Next                  |
-| 2. Buyer pages and vendor admin                        |                                                                             |                       |
+|                                                        | 1d. Commitment (waitlist root, public draw ids) and beacon handling         | Done                  |
+|                                                        | 1e. Hash-chained public log                                                 | Done                  |
+|                                                        | 1f. Engine audit: hardening, continuity, hostile and property tests         | Done, awaiting review |
+| 2. Buyer pages and vendor admin                        |                                                                             | Next                  |
 | 3. Targets: Workers with D1, Node with SQLite          |                                                                             |                       |
 | 4. Redemption: WooCommerce connector, signed links     |                                                                             |                       |
 | 5. Public verifier                                     |                                                                             |                       |
@@ -52,8 +53,8 @@ Build steps for the first beta. Each stage ends with `pnpm check` green; then th
 
 ## Stage 1d notes
 
-- Each place has a fixed tag from its first view key, and a new public draw id every draw, so published lists cannot
-  be linked across draws while the entry code or view key can still find the place.
+- Each place has a tag from its current view key (replaced on recovery since stage 1f), and a new public draw id every
+  draw, so published lists cannot be linked across draws while the entry code or view key can still find the place.
 - The commitment holds the root of a Merkle tree over `(public draw id, priority)` leaves, the counts by priority,
   the settings digest, the protocol version and a quicknet round named at least 10 minutes ahead (by default the
   first round six hours after commit, to leave time for a public timestamp of the root).
@@ -65,3 +66,42 @@ Build steps for the first beta. Each stage ends with `pnpm check` green; then th
   holds real responses from two drand endpoints.
 - Fetching from endpoints and timestamping the root are adapter work in step 3; the BLS signature check is in the
   public verifier, step 5.
+
+## Stage 1e notes
+
+- Each public event is an entry `(sequenceNumber, recordedAt, entryType, body, previousHash, entryHash)`; the hash
+  covers the canonical JSON of the other five fields, so changing, removing, inserting or reordering any entry shows.
+- Canonical JSON sorts keys at every level and allows only safe integers, well-formed strings and plain ASCII field
+  names, so any language can reproduce it. `tests/vectors/publicLog.json` is computed independently with Python and
+  includes escaped and non-ASCII text.
+- A checkpoint is the entry count and the latest hash. A buyer's saved checkpoint can be checked against a later log,
+  and two checkpoints of one size with different hashes prove a split view.
+- Witness cosigning waits until witnesses exist; reposted checkpoints cover split views until then.
+- This completes step 1: the engine core is pure domain code with no I/O.
+
+## Stage 1f notes: engine audit
+
+- Every time, count and duration is checked as a safe whole number, so NaN, infinities, fractions and unsafe
+  integers are refused everywhere. Guards fail closed: a corrupt recovery time keeps the current codes.
+- Fixed: duplicate entrants, units or places in draws and offers; a slice re-run, or one place under two ids across
+  slices; negative-zero priorities; short entry and series keys; oversized typed codes; full-width characters in
+  codes; duplicate or differently spelled beacon endpoints and attesters; a void while an endpoint had served the
+  round; a repeated recovery request bringing the swap forward or skipping the six-hour minimum; malformed log
+  entries, proofs and leaves from a hostile server crashing the verifier.
+- Vendor continuity: withdrawn offers and offers lapsed through long outages never count against buyers; snapshots
+  are validated before import (shape, times, rule, duplicates on every stored value, log chain); with no snapshot, a
+  buyer's current entry code restores their place from the last published draw, following published recoveries,
+  and replaced codes are refused.
+- Performance (`pnpm bench`, Node on this machine): joining 0.45 ms, reading a code 0.002 ms, a proof from stored
+  tree levels 0.05 ms for 50,000 places. Rebuilding the tree per proof took 514 ms and is now verifier-only.
+- Rebuilt on typed values: branded times, durations, counts, priorities, rounds, hashes and keys made only by
+  constructors, and parsers for every outside record. The scattered checks are gone; engine functions hold only
+  domain rules. The draw now orders the committed leaves, as the verifier does.
+- Tests: hostile numbers for every value constructor, junk for every parser, fail-closed checks, seeded property tests, vendor-continuity
+  scenarios with `test.todo` markers for later steps, and a regression test for each finding of an independent
+  adversarial audit.
+- Priority-after-losses now drops a place back to the lowest priority after two offers in a row go unclaimed, so an
+  abandoned or bot place stops taking the first offer every drop; withdrawn offers never count.
+- Trade-offs left open: the void count and
+  commitment time come from the caller, so the verifier counts voids from the log and "timing unproven" must be shown
+  plainly; the verifier should reject duplicate JSON keys in a downloaded log.

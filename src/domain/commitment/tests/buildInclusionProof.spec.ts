@@ -1,13 +1,17 @@
 import assert from "node:assert/strict";
 import { describe, test } from "node:test";
 import { deterministicBytes32Hex } from "#tests/support/functions/deterministicBytes32Hex.function.ts";
-import vectors from "#tests/vectors/waitlistCommitment.json" with { type: "json" };
+import { waitlistCommitmentVectors } from "#tests/support/functions/waitlistCommitmentVectors.function.ts";
 import { buildInclusionProof } from "../functions/buildInclusionProof.function.ts";
+
+const vectors = waitlistCommitmentVectors();
 
 describe("Using buildInclusionProof, when given the shared cross-implementation vectors", () => {
     test("then it should produce the expected proof", async () => {
-        const proof = await buildInclusionProof(vectors.leaves, vectors.inclusionProof.publicDrawId);
-        assert.deepEqual(proof, vectors.inclusionProof.steps);
+        assert.deepEqual(
+            await buildInclusionProof(vectors.leaves, vectors.inclusionProof.publicDrawId),
+            vectors.inclusionProof.steps,
+        );
     });
 });
 

@@ -1,8 +1,10 @@
 import assert from "node:assert/strict";
 import { describe, test } from "node:test";
-import vectors from "#tests/vectors/waitlistCommitment.json" with { type: "json" };
+import { waitlistCommitmentVectors } from "#tests/support/functions/waitlistCommitmentVectors.function.ts";
+import { toPriority } from "#domain/allocation-rules/functions/toPriority.function.ts";
 import { isLeafInWaitlistRoot } from "../functions/isLeafInWaitlistRoot.function.ts";
 
+const vectors = waitlistCommitmentVectors();
 const { publicDrawId, steps } = vectors.inclusionProof;
 const leaf = vectors.leaves.find((candidate) => candidate.publicDrawId === publicDrawId) ?? assert.fail();
 
@@ -14,7 +16,7 @@ describe("Using isLeafInWaitlistRoot, when given a buyer's leaf and proof from t
 
 describe("Using isLeafInWaitlistRoot, when the leaf claims a higher priority than was committed", () => {
     test("then it should reject it", async () => {
-        const promoted = { ...leaf, priority: leaf.priority + 1 };
+        const promoted = { ...leaf, priority: toPriority(leaf.priority + 1) };
         assert.equal(await isLeafInWaitlistRoot(promoted, steps, vectors.committedWaitlistRoot), false);
     });
 });

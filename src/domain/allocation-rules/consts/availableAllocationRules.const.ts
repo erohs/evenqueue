@@ -7,6 +7,6 @@ import type { AllocationRuleId } from "../types/AllocationRuleId.type.ts";
 /** The rules a vendor can choose per drop, with their default settings. */
 export const availableAllocationRules: Readonly<Record<AllocationRuleId, IAllocationRule>> = {
     "equal-chance-each-drop": createEqualChanceEachDropRule(),
-    "priority-after-losses": createPriorityAfterLossesRule(2),
+    "priority-after-losses": createPriorityAfterLossesRule(2, 2),
     "join-order-line": createJoinOrderLineRule(2),
 };

@@ -18,6 +18,11 @@ had the smallest worst-case shortfall for any group of buyers, including people 
 An uncapped version lets old places build an unbounded lead; a plain line starves newcomers and suits only a closed
 group. Equal-chance-each-drop is kept for vendors who need newcomers to have fully equal odds.
 
+One unclaimed offer leaves a place's priority unchanged, as the simulation assumed, but two in a row drop it back
+to the lowest priority (changed 2026-10-19, after the engine audit). Otherwise a place nobody claims for, abandoned or
+run by a bot, keeps top priority and takes the first offer every drop. Offers the vendor withdrew never count. A
+buyer who misses one offer loses nothing; one who misses two climbs back after two losses.
+
 ## The random tiebreak key has a fixed, versioned layout
 
 `SHA-256("evenqueue/random-tiebreak-key/v1" 0x00 ‖ beaconRandomness ‖ committedWaitlistRoot ‖ publicDrawId)`. The public
@@ -26,12 +31,54 @@ never an edit in place.
 
 ## Public draw ids and the waitlist root have fixed, versioned layouts
 
-A place's tag is `SHA-256("evenqueue/place-tag/v1" 0x00 ‖ viewKey)`, taken from the view key it was first issued and
-kept through recovery, so the view key as well as the entry code can find the place in a published draw. Its public
-draw id is `SHA-256("evenqueue/public-draw-id/v1" 0x00 ‖ placeTag ‖ drawId)`. Leaves are
+A place's tag is `SHA-256("evenqueue/place-tag/v1" 0x00 ‖ viewKey)`, from its current view key, so the view key as
+well as the entry code can find the place in a published draw. It is replaced with the codes on recovery, so whoever
+holds the current codes can always find, and if the database is lost restore, their place; the public `recovery` log
+entry links the old and new public draw ids for the draw in progress.
+
+Its public draw id is `SHA-256("evenqueue/public-draw-id/v1" 0x00 ‖ placeTag ‖ drawId)`. Leaves are
 `SHA-256(0x00 ‖ publicDrawId ‖ priority as int32 big-endian)`, sorted by public draw id; nodes are
-`SHA-256(0x01 ‖ left ‖ right)`, and an odd last node moves up unchanged. The public verifier must reproduce all of it, so a change means a new protocol version and
-new vectors.
+`SHA-256(0x01 ‖ left ‖ right)`, and an odd last node moves up unchanged. The public verifier must reproduce all of it,
+so a change means a new protocol version and new vectors.
+
+## Values are typed where they enter, so the engine never re-checks them
+
+"Parse, don't validate". Times, durations, counts, priorities, beacon rounds, 32-byte hashes and server keys are
+distinct types (`EpochMilliseconds`, `DurationMilliseconds`, `Count`, `Priority`, `BeaconRound`, `Bytes32Hex`,
+`ServerKey`), each made only by one `to…` constructor, or by arithmetic helpers such as `addDuration` that return
+the type. Records from outside (storage, backups, downloaded logs and proofs, endpoint replies) enter only through a
+`parse…` or `read…` function that returns the typed value or every problem, and never throws. So NaN, infinities,
+fractions, inverted gaps, duplicate places and malformed hashes cannot reach an engine function, and engine functions
+contain only domain rules, not defensive checks. A higher layer cannot call the engine with a raw number or string:
+the compiler refuses it.
+
+Bounds make arithmetic safe by construction: a time is within a JavaScript Date's range and a duration is at most a
+century, so sums stay exact. Collections that must not repeat are typed as sets and maps (`placeIdsInDrawOrder`,
+`offersMadeByUnitNumber`, beacon readings by endpoint origin).
+
+## A draw orders the committed leaves, not live places
+
+The allocation rule fixes each place's priority once, when the draw is committed (`leavesForCommitment`). The draw
+then orders exactly the published leaves, which is what the public verifier does too, so the two can never disagree,
+and a recovery during a sliced close cannot give one place two ids. Slices are numbered: a slice already added is a
+no-op, and a skipped one is refused. The root of an empty waitlist is SHA-256 of nothing, as in RFC 6962.
+
+## A vendor's failure never costs a buyer their place
+
+- An offer the vendor withdraws, or that lapses because outages ran past the window's extension limit, counts as
+  `offer-withdrawn`: the same as not being offered, under every rule.
+- A snapshot holds places, stored lookups and the public log, but no codes and no keys. Entry codes and view keys are
+  looked up by unkeyed hashes, so they keep working on any host or domain. Recovery codes need the series key, which
+  needs its own backup.
+- With no snapshot, a buyer's entry code alone restores their place from the last published draw, at the published
+  priority. A place offered a unit in that draw is held for the vendor to check against sales, because the public
+  record cannot show whether it bought. The view key cannot restore a place, so a helper cannot take it.
+
+## Proofs are served from stored tree levels
+
+Rebuilding the Merkle tree for one buyer's proof took about 500 ms for 10,180 places, far over the 10 ms CPU budget
+of a Workers Free request. The close pipeline builds the levels once and stores them; a proof is then one read per
+level, about 0.05 ms for 50,000 places. `pnpm bench` measures this and the other hot paths.
 
 ## Node's built-in test runner
 

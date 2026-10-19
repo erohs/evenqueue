@@ -1,8 +1,10 @@
 import assert from "node:assert/strict";
 import { describe, test } from "node:test";
 import { deterministicBytes32Hex } from "#tests/support/functions/deterministicBytes32Hex.function.ts";
-import vectors from "#tests/vectors/waitlistCommitment.json" with { type: "json" };
+import { waitlistCommitmentVectors } from "#tests/support/functions/waitlistCommitmentVectors.function.ts";
 import { computePublicDrawId } from "../functions/computePublicDrawId.function.ts";
+
+const vectors = waitlistCommitmentVectors();
 
 describe("Using computePublicDrawId, when given the shared cross-implementation vectors", () => {
     for (const [placeNumber, place] of vectors.places.entries()) {

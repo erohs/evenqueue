@@ -21,7 +21,8 @@
         "lint:files": "node tools/file-layout/main.ts",
         "lint": "eslint . && prettier --check . && pnpm lint:files",
         "format": "prettier --write .",
-        "test": "node --test \"src/**/tests/*.spec.ts\"",
+        "test": "node --test \"src/**/tests/*.spec.ts\" \"tests/hostile-input/*.spec.ts\" \"tests/properties/*.spec.ts\" \"tests/scenarios/*.spec.ts\"",
+        "bench": "node tools/benchmarks/main.ts",
         "check": "pnpm typecheck && pnpm lint && pnpm test"
     },
     "devDependencies": {

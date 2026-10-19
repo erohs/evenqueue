@@ -1,5 +1,7 @@
 import { createHash } from "node:crypto";
+import { toBytes32Hex } from "#domain/shared/bytes/functions/toBytes32Hex.function.ts";
 import type { Bytes32Hex } from "#domain/shared/bytes/types/Bytes32Hex.type.ts";
 
 /** Made with Node's own crypto, so fixtures do not depend on the code under test. */
-export const deterministicBytes32Hex = (label: string): Bytes32Hex => createHash("sha256").update(label).digest("hex");
+export const deterministicBytes32Hex = (label: string): Bytes32Hex =>
+    toBytes32Hex(createHash("sha256").update(label).digest("hex"));

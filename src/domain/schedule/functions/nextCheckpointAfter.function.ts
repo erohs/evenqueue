@@ -1,4 +1,4 @@
-import { assertPositiveWholeNumber } from "#domain/shared/validation/functions/assertPositiveWholeNumber.function.ts";
+import { addDuration } from "#domain/shared/time/functions/addDuration.function.ts";
 import type { DurationMilliseconds } from "#domain/shared/time/types/DurationMilliseconds.type.ts";
 import type { EpochMilliseconds } from "#domain/shared/time/types/EpochMilliseconds.type.ts";
 
@@ -7,8 +7,5 @@ export const nextCheckpointAfter = (
     drawAt: EpochMilliseconds,
     interval: DurationMilliseconds,
     now: EpochMilliseconds,
-): EpochMilliseconds => {
-    assertPositiveWholeNumber(interval, "checkpoint interval");
-    if (now < drawAt) return drawAt;
-    return drawAt + (Math.floor((now - drawAt) / interval) + 1) * interval;
-};
+): EpochMilliseconds =>
+    now < drawAt ? drawAt : addDuration(drawAt, interval, Math.floor((now - drawAt) / interval) + 1);

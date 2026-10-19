@@ -45,6 +45,15 @@ SCREAMING_SNAKE_CASE. _(lint)_
 not abbreviations, except `id` and `i`. Name things for what they mean in the vendor's and buyer's world:
 `waitlistPlace`, not `ticket`; `equal-chance-each-drop`, not a shorthand code.
 
+## Values and parsing
+
+Branded types carry what has been checked: `EpochMilliseconds`, `DurationMilliseconds`, `Count`, `Priority`,
+`BeaconRound`, `Bytes32Hex`, `ServerKey`, `FormNonce`, `RecoveryDelay`. Each has one `is…` guard and one `to…`
+constructor, which is the only check for that kind. Outside records go through a `parse…` function that returns a
+`ParseResult` and never throws; it is built from `parsedFields` and `parsedList`. Engine functions take only typed
+values and contain no defensive checks: an `if` in the engine is a domain rule. Casting to a branded type happens in
+exactly the constructor or helper that owns it.
+
 ## Functions
 
 Arrow functions everywhere, never `function` declarations or expressions _(lint)_, with explicit return types on

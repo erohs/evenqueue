@@ -1,3 +1,1 @@
-import type { DurationMilliseconds } from "../types/DurationMilliseconds.type.ts";
-
-export const millisecondsPerSecond: DurationMilliseconds = 1_000;
+export const millisecondsPerSecond = 1_000;

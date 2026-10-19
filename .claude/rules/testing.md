@@ -11,12 +11,15 @@ The runner is Node's built-in `node:test` with
 
 A test earns its place by checking something the code decides: an ordering, a priority, a calculation, a state change.
 
-| Level            | Where                                  | Runs against                            |
-| ---------------- | -------------------------------------- | --------------------------------------- |
-| Unit             | `src/domain/<area>/tests/name.spec.ts` | pure domain functions                   |
-| Use case         | `src/application/<use-case>/tests/`    | the use case with in-memory adapters    |
-| Adapter contract | `tests/contracts/name.spec.ts`         | one contract, run against every adapter |
-| End to end       | `tests/e2e/name.spec.ts`               | Playwright, JavaScript on and off       |
+| Level            | Where                                  | Runs against                                        |
+| ---------------- | -------------------------------------- | --------------------------------------------------- |
+| Unit             | `src/domain/<area>/tests/name.spec.ts` | pure domain functions                               |
+| Use case         | `src/application/<use-case>/tests/`    | the use case with in-memory adapters                |
+| Hostile input    | `tests/hostile-input/name.spec.ts`     | every parameter, fed hostile values                 |
+| Property         | `tests/properties/name.spec.ts`        | seeded random cases, many per run                   |
+| Scenario         | `tests/scenarios/name.spec.ts`         | a story across areas; `test.todo` marks later steps |
+| Adapter contract | `tests/contracts/name.spec.ts`         | one contract, run against every adapter             |
+| End to end       | `tests/e2e/name.spec.ts`               | Playwright, JavaScript on and off                   |
 
 A spec is named after the function or use case it tests. Shared fixtures live in `tests/support/`, in the same kind
 folders as the source, and are imported through `#tests/`. Cross-implementation vectors are JSON in `tests/vectors/`,

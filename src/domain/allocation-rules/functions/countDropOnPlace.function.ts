@@ -1,3 +1,4 @@
+import { incrementCount } from "#domain/shared/counting/functions/incrementCount.function.ts";
 import type { IWaitlistPlace } from "#domain/waitlist/interfaces/IWaitlistPlace.ts";
 import type { PlaceOutcomeInDrop } from "../types/PlaceOutcomeInDrop.type.ts";
 
@@ -7,6 +8,6 @@ export const countDropOnPlace = (
     outcome: Exclude<PlaceOutcomeInDrop, "bought">,
 ): IWaitlistPlace => ({
     ...place,
-    drawsEntered: place.drawsEntered + 1,
-    offersReceived: place.offersReceived + (outcome === "offer-not-taken" ? 1 : 0),
+    drawsEntered: incrementCount(place.drawsEntered),
+    offersReceived: outcome === "offer-not-taken" ? incrementCount(place.offersReceived) : place.offersReceived,
 });

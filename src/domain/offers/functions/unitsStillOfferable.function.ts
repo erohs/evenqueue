@@ -1,10 +1,10 @@
-import type { IUnitAwaitingOffer } from "../interfaces/IUnitAwaitingOffer.ts";
+import type { Count } from "#domain/shared/counting/types/Count.type.ts";
 
-/** Units that have not used up their first offer and backfill offers, lowest unit number first. */
+/** Unit numbers that have not used up their first offer and backfill offers, lowest first, with offers made so far. */
 export const unitsStillOfferable = (
-    units: readonly IUnitAwaitingOffer[],
-    backfillOffersPerUnit: number,
-): IUnitAwaitingOffer[] =>
-    units
-        .filter((unit) => unit.offersMade <= backfillOffersPerUnit)
-        .toSorted((first, second) => first.unitNumber - second.unitNumber);
+    offersMadeByUnitNumber: ReadonlyMap<Count, Count>,
+    backfillOffersPerUnit: Count,
+): [Count, Count][] =>
+    [...offersMadeByUnitNumber]
+        .filter(([, offersMade]) => offersMade <= backfillOffersPerUnit)
+        .toSorted(([first], [second]) => first - second);

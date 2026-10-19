@@ -1,9 +1,13 @@
 import assert from "node:assert/strict";
 import { describe, test } from "node:test";
 import { commitmentInputForTests } from "#tests/support/functions/commitmentInputForTests.function.ts";
-import vectors from "#tests/vectors/waitlistCommitment.json" with { type: "json" };
+import { waitlistCommitmentVectors } from "#tests/support/functions/waitlistCommitmentVectors.function.ts";
 import { beaconRoundTime } from "#domain/beacon/functions/beaconRoundTime.function.ts";
+import { toEpochMilliseconds } from "#domain/shared/time/functions/toEpochMilliseconds.function.ts";
 import { createCommitment } from "../functions/createCommitment.function.ts";
+
+const vectors = waitlistCommitmentVectors();
+const roundTime = beaconRoundTime(commitmentInputForTests().beaconRound);
 
 describe("Using createCommitment, when the named round is well after the commitment", () => {
     test("then it should commit the waitlist root and the place counts", async () => {
@@ -17,14 +21,14 @@ describe("Using createCommitment, when the named round is well after the commitm
 
 describe("Using createCommitment, when the named round is less than ten minutes away", () => {
     test("then it should refuse it", async () => {
-        const committedAt = beaconRoundTime(1_000_000) - 9 * 60_000;
+        const committedAt = toEpochMilliseconds(roundTime - 9 * 60_000);
         await assert.rejects(createCommitment(commitmentInputForTests({ committedAt })), RangeError);
     });
 });
 
 describe("Using createCommitment, when the named round has already passed", () => {
     test("then it should refuse it, so no draw is committed after its randomness is known", async () => {
-        const committedAt = beaconRoundTime(1_000_000) + 1;
+        const committedAt = toEpochMilliseconds(roundTime + 1);
         await assert.rejects(createCommitment(commitmentInputForTests({ committedAt })), RangeError);
     });
 });

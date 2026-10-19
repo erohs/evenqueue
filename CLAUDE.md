@@ -14,6 +14,9 @@ Build in the order of `PROGRESS.md` and record progress there and in `features.j
 - **No personal data at entry, ever.** No option may add a name, e-mail, phone or address to entry.
 - **Every buyer page works without JavaScript** and meets WCAG 2.2 AA.
 - **Readability over cleverness.** Functions 25 lines, files 400, both enforced. One concept per file.
+- **Values are typed where they enter.** Make times, counts, hashes and keys with their `to…` constructor, and read
+  stored or downloaded records with their `parse…` function. Never cast to a branded type, and never re-check a
+  typed value inside the engine.
 - **The domain is pure:** `src/domain/` never imports an adapter, a use case or a Node built-in (lint enforces it),
   so the same code runs on Workers and Node.
 - **Crypto:** WebCrypto only. No hand-written primitives on the request path.
@@ -29,7 +32,7 @@ Folders marked _(later)_ arrive in the step shown.
 src/
   domain/                  #domain: pure rules, no I/O, clock or randomness of its own; the verifier imports it
     shared/                only purpose-named helpers, moved here once a second area needs them
-      bytes/  validation/  ordering/  time/
+      bytes/  counting/  time/  parsing/  ordering/  text/
     waitlist/              a buyer's place
     allocation-rules/      who is offered first, and what happens to a place after a drop
     draw/                  ordering a draw from public inputs: tiebreak key, ranking, slices
@@ -38,7 +41,8 @@ src/
     credentials/           buyer codes, delayed recovery
     commitment/            public draw ids, waitlist root, inclusion proofs, voids
     beacon/                the pinned drand chain, round times, reading endpoints, waiting rules
-    public-log/            hash chain                                            (later, 1e)
+    public-log/            canonical JSON, the hash-chained log, checkpoints
+    continuity/            snapshots and restoring places after a move, outage or lost database
   application/             #application: one folder per thing a person or a timer does   (later, 2)
     ports/interfaces/      IWaitlistStore, IClock, IBeaconSource, IKeyStore, IRateLimiter
     join-waitlist/  check-status/  claim-offer/  run-draw/  ...
@@ -49,8 +53,10 @@ src/
 tests/                     #tests
   support/                 shared fixtures
   vectors/                 JSON vectors shared with the verifier and the WooCommerce connector
+  hostile-input/  properties/  scenarios/
   contracts/  e2e/         one store contract run against every adapter; Playwright   (later)
 tools/file-layout/         the layout check behind `pnpm lint:files`
+tools/benchmarks/          `pnpm bench`: hot paths against the 10 ms request budget
 docs/decisions.md          decisions the code cannot explain
 ```
 

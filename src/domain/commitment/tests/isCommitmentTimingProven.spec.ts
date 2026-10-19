@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import { describe, test } from "node:test";
 import { commitmentInputForTests } from "#tests/support/functions/commitmentInputForTests.function.ts";
 import { beaconRoundTime } from "#domain/beacon/functions/beaconRoundTime.function.ts";
+import { toEpochMilliseconds } from "#domain/shared/time/functions/toEpochMilliseconds.function.ts";
 import { createCommitment } from "../functions/createCommitment.function.ts";
 import { isCommitmentTimingProven } from "../functions/isCommitmentTimingProven.function.ts";
 
@@ -10,7 +11,7 @@ const roundTime = beaconRoundTime(commitment.beaconRound);
 
 describe("Using isCommitmentTimingProven, when the root was timestamped before the round existed", () => {
     test("then it should count the timing as proven", () => {
-        assert.equal(isCommitmentTimingProven(commitment, roundTime - 1), true);
+        assert.equal(isCommitmentTimingProven(commitment, toEpochMilliseconds(roundTime - 1)), true);
     });
 });
 

@@ -5,5 +5,5 @@ export interface IBeaconReadingSummary {
     readonly status: BeaconReadingStatus;
     /** Set only when the status is agreed. */
     readonly beaconRound: IBeaconRound | null;
-    readonly answeringEndpointNames: readonly string[];
+    readonly answeringEndpoints: readonly string[];
 }

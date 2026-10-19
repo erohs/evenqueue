@@ -1,3 +1,1 @@
-import type { DurationMilliseconds } from "../types/DurationMilliseconds.type.ts";
-
-export const millisecondsPerHour: DurationMilliseconds = 3_600_000;
+export const millisecondsPerHour = 3_600_000;

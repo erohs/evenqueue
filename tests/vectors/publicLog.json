@@ -1,0 +1,55 @@
+{
+    "description": "Public log. entryHash = SHA-256(\"evenqueue/public-log-entry/v1\" 0x00 || UTF-8 of the canonical JSON of {sequenceNumber, recordedAt, entryType, body, previousHash}); canonical JSON sorts keys at every level, has no spaces and does not escape non-ASCII. The first entry's previousHash is 64 zeros. Computed independently with Python's standard library. The engine and the public verifier must reproduce every hash.",
+    "entries": [
+        {
+            "sequenceNumber": 0,
+            "recordedAt": 1760000000000,
+            "entryType": "commitment",
+            "body": {
+                "committedWaitlistRoot": "9933063376792273f9d6459774d2ca94a48959ac3778d9ccab3287964d5c16e7",
+                "beaconRound": 1000000,
+                "placeCountsByPriority": [
+                    {
+                        "priority": 2,
+                        "placeCount": 2
+                    },
+                    {
+                        "priority": -3,
+                        "placeCount": 1
+                    }
+                ]
+            },
+            "previousHash": "0000000000000000000000000000000000000000000000000000000000000000",
+            "entryHash": "bfb4186e8d49f1aa7da705d8c14750060864b22e4cb42f3006bad1bd86eedcbc",
+            "canonicalText": "{\"body\":{\"beaconRound\":1000000,\"committedWaitlistRoot\":\"9933063376792273f9d6459774d2ca94a48959ac3778d9ccab3287964d5c16e7\",\"placeCountsByPriority\":[{\"placeCount\":2,\"priority\":2},{\"placeCount\":1,\"priority\":-3}]},\"entryType\":\"commitment\",\"previousHash\":\"0000000000000000000000000000000000000000000000000000000000000000\",\"recordedAt\":1760000000000,\"sequenceNumber\":0}"
+        },
+        {
+            "sequenceNumber": 1,
+            "recordedAt": 1760000060000,
+            "entryType": "service-gap",
+            "body": {
+                "startsAt": 1760000001000,
+                "endsAt": 1760000050000,
+                "note": "Café \"outage\"\nline two\ttab   😀"
+            },
+            "previousHash": "bfb4186e8d49f1aa7da705d8c14750060864b22e4cb42f3006bad1bd86eedcbc",
+            "entryHash": "61120d173b058a87103fe82939f4ef5c6e221e752ed833011cc12ef553cd9f68",
+            "canonicalText": "{\"body\":{\"endsAt\":1760000050000,\"note\":\"Café \\\"outage\\\"\\nline two\\ttab   😀\",\"startsAt\":1760000001000},\"entryType\":\"service-gap\",\"previousHash\":\"bfb4186e8d49f1aa7da705d8c14750060864b22e4cb42f3006bad1bd86eedcbc\",\"recordedAt\":1760000060000,\"sequenceNumber\":1}"
+        },
+        {
+            "sequenceNumber": 2,
+            "recordedAt": 1760000060000,
+            "entryType": "unit-counts",
+            "body": {
+                "free": 0,
+                "sold": 3,
+                "withdrawn": null,
+                "isFinal": true,
+                "labels": []
+            },
+            "previousHash": "61120d173b058a87103fe82939f4ef5c6e221e752ed833011cc12ef553cd9f68",
+            "entryHash": "4ead98e625e0c5ddf78c6dc26e1c966aaaf392c877983ce539006c2a83951ce5",
+            "canonicalText": "{\"body\":{\"free\":0,\"isFinal\":true,\"labels\":[],\"sold\":3,\"withdrawn\":null},\"entryType\":\"unit-counts\",\"previousHash\":\"61120d173b058a87103fe82939f4ef5c6e221e752ed833011cc12ef553cd9f68\",\"recordedAt\":1760000060000,\"sequenceNumber\":2}"
+        }
+    ]
+}

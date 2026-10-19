@@ -3,11 +3,12 @@ import { describe, test } from "node:test";
 import { isCloseTo } from "#tests/support/functions/isCloseTo.function.ts";
 import { shareOfDrawsWon } from "#tests/support/functions/shareOfDrawsWon.function.ts";
 import { waitlistPlacesForTests } from "#tests/support/functions/waitlistPlacesForTests.function.ts";
+import { zeroCount } from "#domain/shared/counting/consts/zeroCount.const.ts";
 import { createEqualChanceEachDropRule } from "../functions/createEqualChanceEachDropRule.function.ts";
 import type { PlaceOutcomeInDrop } from "../types/PlaceOutcomeInDrop.type.ts";
 
 const rule = createEqualChanceEachDropRule();
-const outcomes: readonly PlaceOutcomeInDrop[] = ["bought", "not-offered", "offer-not-taken"];
+const outcomes: readonly PlaceOutcomeInDrop[] = ["bought", "not-offered", "offer-not-taken", "offer-withdrawn"];
 
 describe("Using the equal-chance-each-drop rule, when some buyers have waited longer than others", async () => {
     const places = [
@@ -24,6 +25,6 @@ describe("Using the equal-chance-each-drop rule, when some buyers have waited lo
 describe("Using the equal-chance-each-drop rule, when a drop ends", () => {
     test("then it should remove every place, whatever its outcome", () => {
         const [place] = waitlistPlacesForTests("place", 1);
-        assert.ok(place && outcomes.every((outcome) => rule.placeAfterDrop(place, outcome, 0) === null));
+        assert.ok(place && outcomes.every((outcome) => rule.placeAfterDrop(place, outcome, zeroCount) === null));
     });
 });

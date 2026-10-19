@@ -6,16 +6,20 @@ import { placeIdsOfferedFirst } from "#tests/support/functions/placeIdsOfferedFi
 import { runDropWhereEveryOfferIsBought } from "#tests/support/functions/runDropWhereEveryOfferIsBought.function.ts";
 import { shareOfDrawsWon } from "#tests/support/functions/shareOfDrawsWon.function.ts";
 import { waitlistPlacesForTests } from "#tests/support/functions/waitlistPlacesForTests.function.ts";
+import { zeroCount } from "#domain/shared/counting/consts/zeroCount.const.ts";
 import { createWaitlistPlace } from "#domain/waitlist/functions/createWaitlistPlace.function.ts";
 import type { IWaitlistPlace } from "#domain/waitlist/interfaces/IWaitlistPlace.ts";
+import type { PlaceOutcomeInDrop } from "../types/PlaceOutcomeInDrop.type.ts";
 import { createPriorityAfterLossesRule } from "../functions/createPriorityAfterLossesRule.function.ts";
 
 const rule = createPriorityAfterLossesRule(2);
-const newPlace = (): IWaitlistPlace => createWaitlistPlace(deterministicBytes32Hex("place"), 0);
+const newPlace = (): IWaitlistPlace => createWaitlistPlace(deterministicBytes32Hex("place"), zeroCount);
 
 const afterDropsNotOffered = (place: IWaitlistPlace, drops: number): IWaitlistPlace => {
     let current = place;
-    for (let drop = 0; drop < drops; drop++) current = rule.placeAfterDrop(current, "not-offered", 0) ?? assert.fail();
+    for (let drop = 0; drop < drops; drop++) {
+        current = rule.placeAfterDrop(current, "not-offered", zeroCount) ?? assert.fail();
+    }
     return current;
 };
 
@@ -29,14 +33,14 @@ describe("Using the priority-after-losses rule, when a buyer keeps missing out",
 describe("Using the priority-after-losses rule, when a buyer does not take up an offer", () => {
     test("then it should leave their priority unchanged", () => {
         const afterOneLoss = afterDropsNotOffered(newPlace(), 1);
-        const afterUnclaimedOffer = rule.placeAfterDrop(afterOneLoss, "offer-not-taken", 0) ?? assert.fail();
+        const afterUnclaimedOffer = rule.placeAfterDrop(afterOneLoss, "offer-not-taken", zeroCount) ?? assert.fail();
         assert.equal(rule.priorityOf(afterUnclaimedOffer), rule.priorityOf(afterOneLoss));
     });
 });
 
 describe("Using the priority-after-losses rule, when a buyer buys", () => {
     test("then it should remove their place from the waitlist", () => {
-        assert.equal(rule.placeAfterDrop(newPlace(), "bought", 0), null);
+        assert.equal(rule.placeAfterDrop(newPlace(), "bought", zeroCount), null);
     });
 });
 
@@ -87,5 +91,34 @@ describe("Using createPriorityAfterLossesRule, when the highest level is not a n
 
     test("then it should refuse a fractional level", () => {
         assert.throws(() => createPriorityAfterLossesRule(1.5), RangeError);
+    });
+});
+
+const afterOutcomes = (place: IWaitlistPlace, outcomes: readonly PlaceOutcomeInDrop[]): IWaitlistPlace =>
+    outcomes.reduce((current, outcome) => rule.placeAfterDrop(current, outcome, zeroCount) ?? assert.fail(), place);
+const atTopPriority = (): IWaitlistPlace => afterDropsNotOffered(newPlace(), 2);
+
+describe("Using the priority-after-losses rule, when a buyer leaves two offers in a row unclaimed", () => {
+    test("then it should drop their place back to the lowest priority", () => {
+        const place = afterOutcomes(atTopPriority(), ["offer-not-taken", "not-offered", "offer-not-taken"]);
+        assert.equal(rule.priorityOf(place), 0);
+    });
+
+    test("then it should let their priority rise again as they miss out", () => {
+        const place = afterOutcomes(atTopPriority(), ["offer-not-taken", "offer-not-taken", "not-offered"]);
+        assert.equal(rule.priorityOf(place), 1);
+    });
+});
+
+describe("Using the priority-after-losses rule, when the vendor withdraws offers in between", () => {
+    test("then it should not count the withdrawn offers as unclaimed", () => {
+        const place = afterOutcomes(atTopPriority(), ["offer-not-taken", "offer-withdrawn", "offer-withdrawn"]);
+        assert.equal(rule.priorityOf(place), 2);
+    });
+});
+
+describe("Using createPriorityAfterLossesRule, when the unclaimed offers before a reset are not a positive number", () => {
+    test("then it should refuse zero", () => {
+        assert.throws(() => createPriorityAfterLossesRule(2, 0), RangeError);
     });
 });
