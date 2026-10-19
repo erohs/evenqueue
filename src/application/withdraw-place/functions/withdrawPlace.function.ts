@@ -6,7 +6,7 @@ import type { WithdrawPlaceOutcome } from "../types/WithdrawPlaceOutcome.type.ts
 
 /** One step, with the entry code only: the place is deleted, not marked. */
 export const withdrawPlace = async (
-    services: Pick<IApplicationServices, "waitlists" | "places" | "clock">,
+    services: Pick<IApplicationServices, "waitlists" | "places" | "clock" | "keys">,
     request: ITypedCodeRequest,
 ): Promise<WithdrawPlaceOutcome> => {
     const found = await findDropWithWaitlist(services, request.dropId);

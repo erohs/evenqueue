@@ -6,7 +6,7 @@ import { cancelRecovery } from "#domain/credentials/functions/cancelRecovery.fun
 import type { CancelRecoveryOutcome } from "../types/CancelRecoveryOutcome.type.ts";
 
 export const cancelPlaceRecovery = async (
-    services: Pick<IApplicationServices, "waitlists" | "places" | "clock">,
+    services: Pick<IApplicationServices, "waitlists" | "places" | "clock" | "keys">,
     request: ITypedCodeRequest,
 ): Promise<CancelRecoveryOutcome> => {
     const found = await findDropWithWaitlist(services, request.dropId);

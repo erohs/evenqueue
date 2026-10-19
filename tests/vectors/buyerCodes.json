@@ -1,5 +1,5 @@
 {
-    "description": "Buyer codes. entrySecret = HMAC(entryKey, \"evenqueue/entry-secret/v1\" 0x00 || formNonce)[0:16]; recoveryCode = HMAC(entryKey, \"evenqueue/recovery-code/v1\" 0x00 || formNonce)[0:10]; viewKey = HMAC(entrySecret, \"evenqueue/view-key/v1\" 0x00)[0:16]; entrySecretLookup = SHA-256(\"evenqueue/entry-secret-lookup/v1\" 0x00 || entrySecret); viewKeyLookup = SHA-256(\"evenqueue/view-key-lookup/v1\" 0x00 || viewKey); recoveryCodeCheck = HMAC(waitlistKey, \"evenqueue/recovery-code-check/v1\" 0x00 || recoveryCode); placeTag = SHA-256(\"evenqueue/place-tag/v1\" 0x00 || viewKey). Texts are Crockford base 32 without separators, zero-padded. Computed independently with Python's standard library. The engine and the public verifier must reproduce every case.",
+    "description": "Buyer codes. entrySecret = HMAC(entryKey, \"evenqueue/entry-secret/v1\" 0x00 || formNonce)[0:16]; recoveryCode = HMAC(entryKey, \"evenqueue/recovery-code/v1\" 0x00 || formNonce)[0:10]; viewKey = HMAC(entrySecret, \"evenqueue/view-key/v1\" 0x00)[0:16]; entrySecretLookup = SHA-256(\"evenqueue/entry-secret-lookup/v1\" 0x00 || entrySecret); viewKeyLookup = SHA-256(\"evenqueue/view-key-lookup/v1\" 0x00 || viewKey); recoveryCodeCheck = HMAC(waitlistKey, \"evenqueue/recovery-code-check/v1\" 0x00 || recoveryCode); placeTag = SHA-256(\"evenqueue/place-tag/v1\" 0x00 || viewKey). Texts are Crockford base 32 without separators, zero-padded. Computed independently with Python's standard library. The engine and the public verifier must reproduce every case. typedPhrase: seven words from the 7,760-word list, read from HMAC(entryKey, \"evenqueue/typed-phrase/v1\" 0x00 || formNonce || block number as one byte) for blocks 0, 1, ... as big-endian 16-bit values; a value below 7760 * 8 picks word value mod 7760, others are skipped. typedPhraseCheck = HMAC(waitlistKey, \"evenqueue/typed-phrase-check/v1\" 0x00 || UTF-8 of the words joined by single spaces).",
     "cases": [
         {
             "entryKey": "f80b28d65b11507ea417711113c878a294a110b9d0a76e2e914decd3ccf28abe",
@@ -14,7 +14,9 @@
             "entrySecretLookup": "5ff3d046eaa4013918bb8213797b7649d4e8d783cc362db285fe97e95057b37f",
             "viewKeyLookup": "058b146c7d0e12c7accdf64f1c3cebc38e7dd24277c6314b0e22b2aa7b869b52",
             "recoveryCodeCheck": "ed51004dbcd2be4bf5eb6f36aea6ad8913caf65af2bd522f8214783635c51f29",
-            "placeTag": "172ed7b8c694ce8b1d3e526caa0fe99cfeef3dbb7dfb4740c0515f04cc95da0e"
+            "placeTag": "172ed7b8c694ce8b1d3e526caa0fe99cfeef3dbb7dfb4740c0515f04cc95da0e",
+            "typedPhrase": ["slum", "shell", "upheld", "pushchair", "semicolon", "oncoming", "qualm"],
+            "typedPhraseCheck": "457e99cc29f7fdf81910d59cd18dafa12d62af6edc641861f4507eb3104ef830"
         },
         {
             "entryKey": "a2f0289fa2849ad442bca348c8f046a184ef67d6a87df4609411cee156c561bc",
@@ -29,7 +31,9 @@
             "entrySecretLookup": "8b3a98d606886c4ca1cff1a925175d8a8104be455224ec94b073c550b29d770a",
             "viewKeyLookup": "f1ea0a57304cc7d4ca9b98e090bae56e5f36604fc31184b3c1838c5d0d206cf0",
             "recoveryCodeCheck": "46d1f23455c172009fab9938cb1388b73379eb668eedc0a9b88a0562000e198e",
-            "placeTag": "427d20340475e5df03d78f460d10ddcac8195539cba6fd7934061eea31a3f446"
+            "placeTag": "427d20340475e5df03d78f460d10ddcac8195539cba6fd7934061eea31a3f446",
+            "typedPhrase": ["net", "undertow", "send", "daycare", "drank", "handler", "overheat"],
+            "typedPhraseCheck": "fdcb11ab404f7318a0e4d10531ce57e83c026dcf7d2e211cfb29781d9fcf0e2e"
         }
     ]
 }

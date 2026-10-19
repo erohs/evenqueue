@@ -3,7 +3,7 @@ import { readFormToken } from "#domain/form-guard/functions/readFormToken.functi
 import type { IBenchmark } from "../interfaces/IBenchmark.ts";
 import type { IBenchmarkFixtures } from "../interfaces/IBenchmarkFixtures.ts";
 
-/** The form check and key derivation in one join; with issuing the codes they must fit the 10 ms CPU budget of a Workers Free request. */
+/** The work in one join besides issuing the codes; together they must fit the 10 ms CPU budget of a Workers Free request. */
 export const joinBenchmarks = (fixtures: IBenchmarkFixtures): IBenchmark[] => [
     {
         name: "join: read the signed form token",

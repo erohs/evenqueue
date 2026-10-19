@@ -8,4 +8,6 @@ export interface IIssuedCredentials {
     readonly viewKey: ByteArray;
     /** Printed; replaces a lost entry code after a delay. */
     readonly recoveryCode: ByteArray;
+    /** Seven words that do everything the entry code does, for people who find words easier to keep than a code. */
+    readonly typedPhrase: readonly string[];
 }

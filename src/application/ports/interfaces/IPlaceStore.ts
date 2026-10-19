@@ -14,6 +14,7 @@ export interface IPlaceStore {
     findPlaceByEntryCode: (waitlistId: Bytes32Hex, entrySecretLookup: Bytes32Hex) => Promise<IPlaceRecord | null>;
     findPlaceByViewKey: (waitlistId: Bytes32Hex, viewKeyLookup: Bytes32Hex) => Promise<IPlaceRecord | null>;
     findPlaceByRecoveryCode: (waitlistId: Bytes32Hex, recoveryCodeCheck: Bytes32Hex) => Promise<IPlaceRecord | null>;
+    findPlaceByTypedPhrase: (waitlistId: Bytes32Hex, typedPhraseCheck: Bytes32Hex) => Promise<IPlaceRecord | null>;
     saveCredentials: (waitlistId: Bytes32Hex, placeId: Bytes32Hex, credentials: IPlaceCredentials) => Promise<void>;
     /** Deletes the place outright: nothing about it is kept. */
     removePlace: (waitlistId: Bytes32Hex, placeId: Bytes32Hex) => Promise<void>;

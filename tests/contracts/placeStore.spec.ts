@@ -72,8 +72,9 @@ for (const [name, createStore] of placeStores) {
                 await store.findPlaceByEntryCode(waitlistId, replacement.entrySecretLookup),
                 await store.findPlaceByViewKey(waitlistId, replacement.viewKeyLookup),
                 await store.findPlaceByRecoveryCode(waitlistId, replacement.recoveryCodeCheck),
+                await store.findPlaceByTypedPhrase(waitlistId, replacement.typedPhraseCheck),
             ];
-            assert.deepEqual(found, [recovering, recovering, recovering]);
+            assert.deepEqual(found, [recovering, recovering, recovering, recovering]);
         });
     });
 

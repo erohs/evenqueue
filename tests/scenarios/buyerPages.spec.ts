@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import { describe, test } from "node:test";
 import { codesOnPage } from "#tests/support/functions/codesOnPage.function.ts";
+import { phraseOnPage } from "#tests/support/functions/phraseOnPage.function.ts";
 import { createTestServices } from "#tests/support/functions/createTestServices.function.ts";
 import { walkBuyerJourney } from "#tests/support/functions/walkBuyerJourney.function.ts";
 import type { IPageVisit } from "#tests/support/interfaces/IPageVisit.ts";
@@ -18,7 +19,21 @@ describe("Using the buyer pages with JavaScript off, when a buyer joins", () => 
     });
 });
 
+describe("Using the buyer pages with JavaScript off, when the codes are shown", () => {
+    test("then the phrase should be seven words", () => {
+        assert.equal(phraseOnPage(page("codes").body).split(" ").length, 7);
+    });
+
+    test("then the entry code and the view key should each come with a QR code", () => {
+        assert.equal((page("codes").body.match(/<svg\b/gu) ?? []).length, 2);
+    });
+});
+
 describe("Using the buyer pages with JavaScript off, when the buyer checks their place", () => {
+    test("then the phrase should show the place with a way to leave", () => {
+        assert.ok(hasHeading("status by phrase", "Your place") && page("status by phrase").body.includes("/leave"));
+    });
+
     test("then the entry code, typed loosely, should show the place with a way to leave", () => {
         assert.ok(
             hasHeading("status by entry code", "Your place") && page("status by entry code").body.includes("/leave"),

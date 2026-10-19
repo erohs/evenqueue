@@ -19,8 +19,13 @@ describe("Using issueBuyerCredentials, when given the shared cross-implementatio
                 toFormNonce(decodeHex(vector.formNonce)),
             );
             assert.deepEqual(
-                [encodeHex(issued.entrySecret), encodeHex(issued.viewKey), encodeHex(issued.recoveryCode)],
-                [vector.entrySecret, vector.viewKey, vector.recoveryCode],
+                [
+                    encodeHex(issued.entrySecret),
+                    encodeHex(issued.viewKey),
+                    encodeHex(issued.recoveryCode),
+                    issued.typedPhrase,
+                ],
+                [vector.entrySecret, vector.viewKey, vector.recoveryCode, vector.typedPhrase],
             );
         });
     }

@@ -14,8 +14,8 @@ export const renderStatusFormPage = (page: ICodeFormPage): ISafeHtml =>
                 <input type="text" name="waitlist" value="${page.waitlistLabel}" autocomplete="username" hidden />
                 ${renderCodeField({
                     name: "code",
-                    label: "Entry code or view key",
-                    hint: "26 letters and numbers. Spaces, dashes and capitals don't matter.",
+                    label: "Entry code, phrase or view key",
+                    hint: "The 26 letters and numbers, or the seven words. Spaces, dashes and capitals don't matter.",
                     error: page.error,
                     typed: page.typed,
                     autocomplete: "current-password",

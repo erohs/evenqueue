@@ -12,9 +12,9 @@ Build steps for the first beta. Each stage ends with `pnpm check` green; then th
 |                                                        | 1f. Engine audit: hardening, continuity, hostile and property tests         | Done                  |
 | 2. Buyer pages and vendor admin                        | 2a. Waitlists and drops: settings, change classes, freeze rules, digest     | Done                  |
 |                                                        | 2b. Application ports, instance keys, form guard, buyer use cases           | Done                  |
-|                                                        | 2c. Buyer pages: web layer, no-JS views, headers, rate limits, copy check   | Done, awaiting review |
-|                                                        | 2d. Code artefacts and browser checks: QR, phrase, sheet, .ics, Playwright  | Next                  |
-|                                                        | 2e. Vendor sign-in: passkeys, one-time-code fallback, sessions, audit       |                       |
+|                                                        | 2c. Buyer pages: web layer, no-JS views, headers, rate limits, copy check   | Done                  |
+|                                                        | 2d. Code artefacts and browser checks: QR, phrase, sheet, .ics, Playwright  | Done, awaiting review |
+|                                                        | 2e. Vendor sign-in: passkeys, one-time-code fallback, sessions, audit       | Next                  |
 |                                                        | 2f. Vendor admin pages: waitlists, drops, settings, units                   |                       |
 |                                                        | 2g. Stage audit: accessibility, no-JS and hostile-input pass                |                       |
 | 3. Targets: Workers with D1, Node with SQLite          |                                                                             |                       |
@@ -182,3 +182,26 @@ Build steps for the first beta. Each stage ends with `pnpm check` green; then th
   axe, keyboard and phone-width checks come with Playwright in 2d.
 - Next checkpoint times, offers and claiming arrive with stored draws (step 3) and redemption (step 4); the vendor's
   own time zone arrives with the admin pages. Times show in UTC until then.
+
+## Stage 2d notes: code artefacts and browser checks
+
+- Seven-word phrase: drawn from a 7,760-word list adapted from the EFF Large Wordlist (CC BY 3.0 US, see
+  `NOTICE.md`), with the four hyphenated words and twelve gambling words removed, about 90.5 bits. Derived from the
+  form's nonce like the codes, stored only as an HMAC under the waitlist key, and accepted in the same field as the
+  entry code with the same full access. Recovery replaces it with the codes. `tests/vectors/buyerCodes.json` gains
+  the phrase, computed independently with Python.
+- QR codes: a small encoder of our own (alphanumeric mode, level M, versions 1 to 3), drawn as inline SVG, black on
+  white in every theme, beside the entry code and the view key. It matches every module of `tests/vectors/qrCodes.json`,
+  made with the segno library, including the mask choice. segno adds a whole zero byte when the terminator ends on a
+  byte boundary, which the standard does not, and every 26-character code does; the vectors avoid that case and a
+  separate test pins the data for it. Two codes cost about 1.9 ms per codes page.
+- Printing: the codes page prints as a sheet of codes and QR codes, without forms or footer, under the neutral
+  waitlist label.
+- Calendar: `/d/{id}/calendar` gives an RFC 5545 file with when joining closes, in UTC, under the waitlist label,
+  with a stable event id so a re-import updates it. Draw and checkpoint times join it with stored draws (step 3).
+- Browser checks (`pnpm test:e2e`, Playwright 1.63 with the browsers already installed, axe 4.13): the whole visit
+  with JavaScript off; axe with every WCAG 2.2 A and AA rule on every kind of page in light and dark; the skip link
+  and joining by keyboard alone with a visible focus ring; no sideways scrolling at 320 CSS pixels. Each runs in
+  Chromium, Firefox, WebKit and an emulated phone. The skip-link check is skipped in WebKit, which reaches links by
+  keyboard only with a setting it can't turn on. Screenshots of every page in both themes land in `test-results/`.
+- Still manual before release: NVDA and VoiceOver passes, and scanning a printed QR code with a phone.

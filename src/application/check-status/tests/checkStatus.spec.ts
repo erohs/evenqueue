@@ -42,3 +42,10 @@ describe("Using checkStatus, given a buyer on the waitlist, when the recovery co
         assert.equal((await statusFor(formatCodeForDisplay(codes.recoveryCode))).kind, "code-not-recognised");
     });
 });
+
+describe("Using checkStatus, given a buyer on the waitlist, when they type their seven-word phrase", () => {
+    test("then it should give the same full access as the entry code", async () => {
+        const status = await statusFor(codes.typedPhrase.join(" ").toUpperCase());
+        assert.equal(status.kind === "status" && status.access, "entry-code");
+    });
+});

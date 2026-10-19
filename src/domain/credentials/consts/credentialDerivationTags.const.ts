@@ -9,4 +9,6 @@ export const credentialDerivationTags = {
     viewKeyLookup: encodeTag("view-key-lookup"),
     recoveryCodeCheck: encodeTag("recovery-code-check"),
     placeId: encodeTag("place-id"),
+    typedPhrase: encodeTag("typed-phrase"),
+    typedPhraseCheck: encodeTag("typed-phrase-check"),
 } as const;

@@ -4,6 +4,7 @@ import type { ICodesForDisplay } from "#web/views/interfaces/ICodesForDisplay.ts
 
 export const codesForDisplay = (codes: IIssuedCredentials): ICodesForDisplay => ({
     entryCode: formatCodeForDisplay(codes.entrySecret),
+    typedPhrase: codes.typedPhrase.join(" "),
     viewKey: formatCodeForDisplay(codes.viewKey),
     recoveryCode: formatCodeForDisplay(codes.recoveryCode),
 });

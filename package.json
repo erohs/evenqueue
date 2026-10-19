@@ -23,10 +23,13 @@
         "format": "prettier --write .",
         "test": "node --test \"src/**/tests/*.spec.ts\" \"tests/hostile-input/*.spec.ts\" \"tests/properties/*.spec.ts\" \"tests/scenarios/*.spec.ts\" \"tests/contracts/*.spec.ts\"",
         "bench": "node tools/benchmarks/main.ts",
+        "test:e2e": "playwright test",
         "dev": "node src/entry-points/dev-server/main.ts",
         "check": "pnpm typecheck && pnpm lint && pnpm test"
     },
     "devDependencies": {
+        "@axe-core/playwright": "4.13.0",
+        "@playwright/test": "1.63.0",
         "@tsconfig/strictest": "2.0.8",
         "@types/node": "24.19.1",
         "eslint": "10.12.0",

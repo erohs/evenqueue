@@ -9,6 +9,7 @@ const issuedFrom = (vector: (typeof vectors.cases)[number]) => ({
     entrySecret: decodeHex(vector.entrySecret),
     viewKey: decodeHex(vector.viewKey),
     recoveryCode: decodeHex(vector.recoveryCode),
+    typedPhrase: vector.typedPhrase,
 });
 
 describe("Using storedFormOfCredentials, when given the shared cross-implementation vectors", () => {
@@ -20,6 +21,7 @@ describe("Using storedFormOfCredentials, when given the shared cross-implementat
                     entrySecretLookup: vector.entrySecretLookup,
                     viewKeyLookup: vector.viewKeyLookup,
                     recoveryCodeCheck: vector.recoveryCodeCheck,
+                    typedPhraseCheck: vector.typedPhraseCheck,
                     placeTag: vector.placeTag,
                 },
             );
@@ -28,10 +30,13 @@ describe("Using storedFormOfCredentials, when given the shared cross-implementat
 });
 
 describe("Using storedFormOfCredentials, when the waitlist key changes", () => {
-    test("then it should change the recovery code check", async () => {
+    test("then it should change the recovery code and phrase checks", async () => {
         const vector = vectors.cases[0] ?? assert.fail();
         const otherWaitlistKey = toServerKey(decodeHex(vectors.cases[1]?.waitlistKey ?? assert.fail()));
         const stored = await storedFormOfCredentials(issuedFrom(vector), otherWaitlistKey);
-        assert.notEqual(stored.recoveryCodeCheck, vector.recoveryCodeCheck);
+        assert.ok(
+            stored.recoveryCodeCheck !== vector.recoveryCodeCheck &&
+                stored.typedPhraseCheck !== vector.typedPhraseCheck,
+        );
     });
 });

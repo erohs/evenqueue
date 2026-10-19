@@ -8,5 +8,6 @@ export const parseStoredCredentials = (value: unknown): ParseResult<IStoredCrede
         entrySecretLookup: isBytes32Hex,
         viewKeyLookup: isBytes32Hex,
         recoveryCodeCheck: isBytes32Hex,
+        typedPhraseCheck: isBytes32Hex,
         placeTag: isBytes32Hex,
     });

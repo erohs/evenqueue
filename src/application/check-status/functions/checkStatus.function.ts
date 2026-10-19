@@ -7,7 +7,7 @@ import type { CheckStatusOutcome } from "../types/CheckStatusOutcome.type.ts";
 
 /** Takes an entry code or a view key. */
 export const checkStatus = async (
-    services: Pick<IApplicationServices, "waitlists" | "places" | "clock">,
+    services: Pick<IApplicationServices, "waitlists" | "places" | "clock" | "keys">,
     request: ITypedCodeRequest,
 ): Promise<CheckStatusOutcome> => {
     const found = await findDropWithWaitlist(services, request.dropId);

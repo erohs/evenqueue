@@ -108,6 +108,27 @@ template, and every page sends a Content-Security-Policy with no script source, 
 would visibly fail rather than half-work. Every page is `no-store`, because each carries either codes or a form token,
 and a cached token would give two buyers the same codes.
 
+## QR codes come from a small encoder of our own
+
+Buyer codes need only alphanumeric mode, level M and versions 1 to 3, so the encoder is about 20 short functions
+rather than a dependency, keeping the engine free of runtime dependencies. It is checked module for module against
+codes made by the segno library. segno pads with a whole zero byte when the terminator ends on a byte boundary, which
+ISO/IEC 18004 section 7.4.9 does not; every buyer code hits that case, so the encoder follows the standard and the
+vectors avoid the case. Scanners read both.
+
+## The seven-word phrase does everything the entry code does
+
+Some people keep words more easily than a code, so the phrase is a second form of the entry code, not a weaker
+credential. Its list drops hyphenated words, which are easy to mistype, and gambling words such as "casino" or "jackpot", which
+would make a waitlist look like a game of chance.
+At about 90.5 bits it is below the bound for a plain hash, so only an HMAC under the waitlist key is stored.
+
+## Browser tests pin Playwright to the installed browsers
+
+Playwright is pinned to the release whose browser builds are already installed, and a pnpm override keeps
+`@axe-core/playwright` on the same `playwright-core`, so the browser checks need no separate browser download. Move
+Playwright, the override and the browsers together.
+
 ## A vendor's failure never costs a buyer their place
 
 - An offer the vendor withdraws, or that lapses because outages ran past the window's extension limit, counts as

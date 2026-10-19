@@ -64,6 +64,25 @@ describe("Using requestPlaceRecovery, given a recovery requested, once the delay
     });
 });
 
+describe("Using requestPlaceRecovery, given a recovery requested, once the delay has passed, for the phrases", () => {
+    test("then the new phrase should find the place", async () => {
+        const { services, requested } = await recovered();
+        services.clock.advanceBy(12 * hour);
+        const typedCode = requested.codes.typedPhrase.join(" ");
+        assert.equal((await checkStatus(services, { dropId: services.openDrop.dropId, typedCode })).kind, "status");
+    });
+
+    test("then the old phrase should stop working", async () => {
+        const { services, codes } = await recovered();
+        services.clock.advanceBy(12 * hour);
+        const typedCode = codes.typedPhrase.join(" ");
+        assert.equal(
+            (await checkStatus(services, { dropId: services.openDrop.dropId, typedCode })).kind,
+            "code-not-recognised",
+        );
+    });
+});
+
 describe("Using requestPlaceRecovery, given a buyer, when the same recovery form is sent twice", () => {
     test("then it should show the same new codes both times", async () => {
         const services = await createTestServices();

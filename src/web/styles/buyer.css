@@ -199,6 +199,19 @@ a {
     overflow-wrap: anywhere;
 }
 
+.code--words {
+    font-family: var(--font-family-body);
+    letter-spacing: normal;
+}
+
+.qr-code {
+    display: block;
+    inline-size: 9rem;
+    block-size: auto;
+    margin-block-start: 0.75rem;
+    forced-color-adjust: none;
+}
+
 .code-purpose {
     color: var(--color-text-muted);
     font-size: var(--font-size-small);
@@ -241,13 +254,18 @@ a {
     }
 }
 
+/* Paper is light whatever the screen's theme, and a printed sheet carries the codes, not the buttons. */
 @media print {
+    :root {
+        color-scheme: light;
+    }
+
     html {
         background: #ffffff;
         color: #000000;
     }
 
-    form,
+    form.stack,
     .skip-link,
     .page-footer {
         display: none;

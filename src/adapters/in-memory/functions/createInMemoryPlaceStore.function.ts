@@ -32,6 +32,8 @@ export const createInMemoryPlaceStore = (): IPlaceStore => {
         findPlaceByViewKey: (waitlistId, lookup) => findBy(waitlistId, (stored) => stored.viewKeyLookup === lookup),
         findPlaceByRecoveryCode: (waitlistId, check) =>
             findBy(waitlistId, (stored) => stored.recoveryCodeCheck === check),
+        findPlaceByTypedPhrase: (waitlistId, check) =>
+            findBy(waitlistId, (stored) => stored.typedPhraseCheck === check),
         saveCredentials: async (waitlistId, placeId, credentials) => {
             const record = placesOf(waitlistId).get(placeId);
             if (record !== undefined) placesOf(waitlistId).set(placeId, { place: record.place, credentials });

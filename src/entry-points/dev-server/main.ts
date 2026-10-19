@@ -5,7 +5,8 @@ import { sendWebResponse } from "./functions/sendWebResponse.function.ts";
 import { stylesheetResponse } from "./functions/stylesheetResponse.function.ts";
 import { toWebRequest } from "./functions/toWebRequest.function.ts";
 
-const port = Number(process.env["PORT"] ?? 8787);
+/** The port comes as the first argument, so tests can run a server beside one already open. */
+const port = Number(process.argv[2] ?? 8787);
 const origin = `http://localhost:${port}`;
 const { services, drop } = await createDevelopmentServices();
 const dropAddress = `${origin}/d/${drop.dropId}`;

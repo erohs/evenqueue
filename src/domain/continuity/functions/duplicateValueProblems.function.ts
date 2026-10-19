@@ -1,7 +1,13 @@
 import type { IStoredCredentials } from "#domain/credentials/interfaces/IStoredCredentials.ts";
 import type { IPlaceRecord } from "../interfaces/IPlaceRecord.ts";
 
-const storedValueNames = ["entrySecretLookup", "viewKeyLookup", "recoveryCodeCheck", "placeTag"] as const;
+const storedValueNames = [
+    "entrySecretLookup",
+    "viewKeyLookup",
+    "recoveryCodeCheck",
+    "typedPhraseCheck",
+    "placeTag",
+] as const;
 const hasDuplicates = (values: readonly string[]): boolean => new Set(values).size !== values.length;
 
 /** Any id or stored value shared by two places, current or pending, would let one code reach two places. */

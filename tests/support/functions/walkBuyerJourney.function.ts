@@ -3,6 +3,7 @@ import type { ITestServices } from "../interfaces/ITestServices.ts";
 import { codesOnPage } from "./codesOnPage.function.ts";
 import { createPageRecorder } from "./createPageRecorder.function.ts";
 import { fieldValueOnPage } from "./fieldValueOnPage.function.ts";
+import { phraseOnPage } from "./phraseOnPage.function.ts";
 
 /**
  * One buyer's whole visit with JavaScript off: join, check, ask for new codes, cancel them, leave and finish. Returns
@@ -16,6 +17,7 @@ export const walkBuyerJourney = async (services: ITestServices): Promise<Readonl
     const [entryCode = "", viewKey = "", recoveryCode = ""] = codesOnPage(codesPage);
     await visit("status by entry code", "POST", "/status", { code: entryCode.toLowerCase().replaceAll("-", " ") });
     await visit("status by view key", "POST", "/status", { code: viewKey });
+    await visit("status by phrase", "POST", "/status", { code: phraseOnPage(codesPage) });
     await visit("status by wrong code", "POST", "/status", { code: "0000-0000-0000-0000-0000-0000-00" });
     const recoveryToken = fieldValueOnPage(await visit("recovery form", "GET", "/recover"), "formToken");
     services.clock.advanceBy(5_000);

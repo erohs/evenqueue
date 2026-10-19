@@ -4,6 +4,7 @@ import { credentialDerivationTags } from "../consts/credentialDerivationTags.con
 import type { IIssuedCredentials } from "../interfaces/IIssuedCredentials.ts";
 import type { FormNonce } from "../types/FormNonce.type.ts";
 import type { ServerKey } from "../types/ServerKey.type.ts";
+import { deriveTypedPhrase } from "./deriveTypedPhrase.function.ts";
 import { deriveViewKey } from "./deriveViewKey.function.ts";
 
 /**
@@ -15,5 +16,6 @@ export const issueBuyerCredentials = async (entryKey: ServerKey, formNonce: Form
         (await hmacSha256OfConcatenatedParts(entryKey, tag, formNonce)).slice(0, length);
     const entrySecret = await derive(credentialDerivationTags.entrySecret, buyerCodeByteLengths.entrySecret);
     const recoveryCode = await derive(credentialDerivationTags.recoveryCode, buyerCodeByteLengths.recoveryCode);
-    return { entrySecret, viewKey: await deriveViewKey(entrySecret), recoveryCode };
+    const typedPhrase = await deriveTypedPhrase(entryKey, formNonce);
+    return { entrySecret, viewKey: await deriveViewKey(entrySecret), recoveryCode, typedPhrase };
 };

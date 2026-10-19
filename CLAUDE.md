@@ -22,7 +22,7 @@ Build in the order of `PROGRESS.md` and record progress there and in `features.j
 - **Crypto:** WebCrypto only. No hand-written primitives on the request path.
 - **Check a tool's current docs before using it**; this stack moves faster than training data.
 - **Copy:** never "lottery", "raffle", "draw", "prize" or "winner" on buyer pages.
-- **Before ending a stage:** `pnpm check` passes.
+- **Before ending a stage:** `pnpm check` and `pnpm test:e2e` pass.
 
 ## Layout
 
@@ -54,6 +54,7 @@ src/
     in-memory/  web-platform/        cloudflare-d1/  cloudflare-kv/  node-sqlite/  drand-http/  (later, 3)
   web/                     #web: the buyer pages as one Request-to-Response handler
     html/  http/           the escaping template; headers, form reading
+    qr-code/  calendar/    QR codes as SVG; the drop's calendar file
     views/  routes/        pages; the route table and one handler per route
     styles/                tokens.css and buyer.css, served beside the pages
   entry-points/            dev-server/main.ts (`pnpm dev`, in memory); cloudflare-worker/, node-server/,
@@ -63,7 +64,7 @@ tests/                     #tests
   vectors/                 JSON vectors shared with the verifier and the WooCommerce connector
   hostile-input/  properties/  scenarios/
   contracts/               one store contract run against every adapter
-  e2e/                     Playwright, JavaScript on and off                            (later, 2c)
+  e2e/                     Playwright, JavaScript on and off, axe, every engine         (`pnpm test:e2e`)
 tools/file-layout/         the layout check behind `pnpm lint:files`
 tools/benchmarks/          `pnpm bench`: hot paths against the 10 ms request budget
 docs/decisions.md          decisions the code cannot explain

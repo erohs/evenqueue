@@ -64,6 +64,20 @@ describe("Using handleBuyerRequest, when a plain form on the vendor's own site p
     });
 });
 
+describe("Using handleBuyerRequest, for the drop's calendar file", () => {
+    test("then it should be a downloadable calendar that may be cached briefly, being the same for everyone", async () => {
+        const visit = await visitPage(services, "GET", `${dropPath}/calendar`);
+        assert.deepEqual(
+            [
+                visit.headers.get("content-type"),
+                visit.headers.get("cache-control"),
+                visit.body.startsWith("BEGIN:VCALENDAR\r\n"),
+            ],
+            ["text/calendar; charset=utf-8", "public, max-age=300", true],
+        );
+    });
+});
+
 describe("Using handleBuyerRequest, when one address sends more code lookups than a minute allows", () => {
     test("then it should ask it to wait a minute, with Retry-After", async () => {
         const limited = await createTestServices();

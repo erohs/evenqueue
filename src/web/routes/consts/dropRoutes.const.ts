@@ -4,6 +4,7 @@ import { finishVisit } from "../functions/finishVisit.function.ts";
 import { leaveWaitlist } from "../functions/leaveWaitlist.function.ts";
 import { requestNewCodes } from "../functions/requestNewCodes.function.ts";
 import { showDropPage } from "../functions/showDropPage.function.ts";
+import { showScheduleCalendar } from "../functions/showScheduleCalendar.function.ts";
 import { showRecoveryFormPage } from "../functions/showRecoveryFormPage.function.ts";
 import { showStatusFormPage } from "../functions/showStatusFormPage.function.ts";
 import { showStatusPage } from "../functions/showStatusPage.function.ts";
@@ -18,4 +19,5 @@ export const dropRoutes: readonly IDropRoute[] = [
     { path: "/recover", onGet: showRecoveryFormPage, onPost: requestNewCodes },
     { path: "/recover/cancel", onPost: cancelNewCodes },
     { path: "/finish", onPost: finishVisit },
+    { path: "/calendar", onGet: showScheduleCalendar },
 ];

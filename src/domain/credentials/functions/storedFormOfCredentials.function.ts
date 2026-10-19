@@ -4,6 +4,7 @@ import type { IStoredCredentials } from "../interfaces/IStoredCredentials.ts";
 import type { ServerKey } from "../types/ServerKey.type.ts";
 import { entrySecretLookup } from "./entrySecretLookup.function.ts";
 import { recoveryCodeCheck } from "./recoveryCodeCheck.function.ts";
+import { typedPhraseCheck } from "./typedPhraseCheck.function.ts";
 import { viewKeyLookup } from "./viewKeyLookup.function.ts";
 
 export const storedFormOfCredentials = async (
@@ -13,5 +14,6 @@ export const storedFormOfCredentials = async (
     entrySecretLookup: await entrySecretLookup(issued.entrySecret),
     viewKeyLookup: await viewKeyLookup(issued.viewKey),
     recoveryCodeCheck: await recoveryCodeCheck(waitlistKey, issued.recoveryCode),
+    typedPhraseCheck: await typedPhraseCheck(waitlistKey, issued.typedPhrase),
     placeTag: await derivePlaceTag(issued.viewKey),
 });
