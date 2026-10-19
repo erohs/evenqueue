@@ -13,7 +13,7 @@ export interface ICommitment {
     readonly placeCount: Count;
     /** Highest priority first, so the verifier can check how many places moved up since the last draw. */
     readonly placeCountsByPriority: readonly IPriorityCount[];
-    /** Digest of the draw's frozen settings: rule, units, windows. */
+    /** Digest of the settings fixed once the drop opened: rule, whether places are kept, entrant cap, entry window. */
     readonly settingsDigest: Bytes32Hex;
     readonly beaconChainHash: string;
     readonly beaconRound: BeaconRound;

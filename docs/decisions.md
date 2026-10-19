@@ -63,6 +63,23 @@ then orders exactly the published leaves, which is what the public verifier does
 and a recovery during a sliced close cannot give one place two ids. Slices are numbered: a slice already added is a
 no-op, and a skipped one is refused. The root of an empty waitlist is SHA-256 of nothing, as in RFC 6962.
 
+## Buyers join a drop on the terms its page showed
+
+Once a drop opens, its entrant cap and entry window are fixed, not only once it is committed: buyers decided whether
+and when to join on those terms, and the settings digest in the commitment covers them. A vendor who needs different
+terms cancels the drop before commitment, which is logged, and opens a new one; places stay on the waitlist. Settings
+that change how long buyers have, or where the form may be embedded, change only after a published 24-hour notice and
+a fresh sign-in, and the offer window can only grow. Every setting must be given a change class, so a new one cannot be
+added without deciding this.
+
+The settings digest is `SHA-256("evenqueue/settings-digest/v1" 0x00 ‖ canonical JSON of {allocationRuleId,
+shouldForgetPlacesAfterEachDrop, entrantCap, entryWindowMilliseconds})`. The public verifier recomputes it, so a
+change means a new version tag and new vectors.
+
+The lower bounds on the windows (24 hours to join, 12 to claim) are there for buyers with intermittent internet
+access, who lose out under short windows; the offer window's upper bound of five days is the shortest time a card
+payment stays valid.
+
 ## A vendor's failure never costs a buyer their place
 
 - An offer the vendor withdraws, or that lapses because outages ran past the window's extension limit, counts as

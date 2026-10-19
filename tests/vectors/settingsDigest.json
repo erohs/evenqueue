@@ -1,0 +1,35 @@
+{
+    "description": "Settings digest. digest = SHA-256(\"evenqueue/settings-digest/v1\" 0x00 || UTF-8 of the canonical JSON of {allocationRuleId, shouldForgetPlacesAfterEachDrop, entrantCap, entryWindowMilliseconds}); canonical JSON sorts keys and has no spaces. Computed independently with Python's standard library. The engine and the public verifier must reproduce every digest.",
+    "cases": [
+        {
+            "fields": {
+                "allocationRuleId": "priority-after-losses",
+                "shouldForgetPlacesAfterEachDrop": false,
+                "entrantCap": 50000,
+                "entryWindowMilliseconds": 259200000
+            },
+            "canonicalJson": "{\"allocationRuleId\":\"priority-after-losses\",\"entrantCap\":50000,\"entryWindowMilliseconds\":259200000,\"shouldForgetPlacesAfterEachDrop\":false}",
+            "digest": "9870c87806e79146b840133485e1800335448f07758855f3edd9ead80d49fe31"
+        },
+        {
+            "fields": {
+                "allocationRuleId": "join-order-line",
+                "shouldForgetPlacesAfterEachDrop": false,
+                "entrantCap": 300,
+                "entryWindowMilliseconds": 129600000
+            },
+            "canonicalJson": "{\"allocationRuleId\":\"join-order-line\",\"entrantCap\":300,\"entryWindowMilliseconds\":129600000,\"shouldForgetPlacesAfterEachDrop\":false}",
+            "digest": "27b106f8628d1a07d16eed4bcf50038d1f6681623b53ec77e1cd0a44116ff5e7"
+        },
+        {
+            "fields": {
+                "allocationRuleId": "equal-chance-each-drop",
+                "shouldForgetPlacesAfterEachDrop": true,
+                "entrantCap": 1,
+                "entryWindowMilliseconds": 86400000
+            },
+            "canonicalJson": "{\"allocationRuleId\":\"equal-chance-each-drop\",\"entrantCap\":1,\"entryWindowMilliseconds\":86400000,\"shouldForgetPlacesAfterEachDrop\":true}",
+            "digest": "07f6325851e7fcef5a064d27b406ee0083ba2696f9f34bceda51af3048a014aa"
+        }
+    ]
+}

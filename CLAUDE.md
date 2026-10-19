@@ -33,7 +33,8 @@ src/
   domain/                  #domain: pure rules, no I/O, clock or randomness of its own; the verifier imports it
     shared/                only purpose-named helpers, moved here once a second area needs them
       bytes/  counting/  time/  parsing/  ordering/  text/
-    waitlist/              a buyer's place
+    waitlist/              a vendor's waitlist and a buyer's place on it
+    drops/                 one release of units: its states, settings and when each setting may change
     allocation-rules/      who is offered first, and what happens to a place after a drop
     draw/                  ordering a draw from public inputs: tiebreak key, ranking, slices
     schedule/              windows measured in uptime, check-in times (checkpoints)

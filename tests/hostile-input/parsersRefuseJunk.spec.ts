@@ -7,11 +7,14 @@ import { parseInclusionProof } from "#domain/commitment/functions/parseInclusion
 import { parsePublishedLeaves } from "#domain/commitment/functions/parsePublishedLeaves.function.ts";
 import { readWaitlistSnapshot } from "#domain/continuity/functions/readWaitlistSnapshot.function.ts";
 import { parsePlaceCredentials } from "#domain/credentials/functions/parsePlaceCredentials.function.ts";
+import { parseDrop } from "#domain/drops/functions/parseDrop.function.ts";
+import { parseDropSettings } from "#domain/drops/functions/parseDropSettings.function.ts";
 import { readTypedCode } from "#domain/credentials/functions/readTypedCode.function.ts";
 import { parseLogCheckpoint } from "#domain/public-log/functions/parseLogCheckpoint.function.ts";
 import { parsePublicLog } from "#domain/public-log/functions/parsePublicLog.function.ts";
 import { parseServiceGap } from "#domain/schedule/functions/parseServiceGap.function.ts";
 import type { ParseResult } from "#domain/shared/parsing/types/ParseResult.type.ts";
+import { parseWaitlist } from "#domain/waitlist/functions/parseWaitlist.function.ts";
 import { parseWaitlistPlace } from "#domain/waitlist/functions/parseWaitlistPlace.function.ts";
 
 /** What a hostile server, a corrupt backup or a tampered row might hold. An empty list is left out: it is a valid log, proof or list of leaves. */
@@ -28,6 +31,9 @@ const junk: readonly unknown[] = [
     [{ sequenceNumber: 0, recordedAt: 0, entryType: "\ud800", body: 0.5, previousHash: "", entryHash: "" }],
     [{ publicDrawId: "A".repeat(64), priority: 2 ** 40 }],
     Array.from({ length: 65 }, () => ({ siblingHash: "0".repeat(64), isSiblingOnLeft: false })),
+    { label: "\u0000", allocationRuleId: "constructor", shouldForgetPlacesAfterEachDrop: "yes" },
+    { unitCount: 2 ** 53, entrantCap: -0.5, entryWindow: Number.POSITIVE_INFINITY, embedOrigins: "https://a.example" },
+    { state: "__proto__", openedAt: null, settings: { pageText: "\ud800" }, settingsNotice: { changes: [] } },
 ];
 
 const parsers: readonly (readonly [
@@ -42,6 +48,9 @@ const parsers: readonly (readonly [
     ["parsePublishedLeaves", parsePublishedLeaves],
     ["parseInclusionProof", parseInclusionProof],
     ["readWaitlistSnapshot", readWaitlistSnapshot],
+    ["parseWaitlist", parseWaitlist],
+    ["parseDropSettings", parseDropSettings],
+    ["parseDrop", parseDrop],
 ];
 
 for (const [name, parse] of parsers) {

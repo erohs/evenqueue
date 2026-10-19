@@ -10,7 +10,12 @@ Build steps for the first beta. Each stage ends with `pnpm check` green; then th
 |                                                        | 1d. Commitment (waitlist root, public draw ids) and beacon handling         | Done                  |
 |                                                        | 1e. Hash-chained public log                                                 | Done                  |
 |                                                        | 1f. Engine audit: hardening, continuity, hostile and property tests         | Done, awaiting review |
-| 2. Buyer pages and vendor admin                        |                                                                             | Next                  |
+| 2. Buyer pages and vendor admin                        | 2a. Waitlists and drops: settings, change classes, freeze rules, digest     | Done, awaiting review |
+|                                                        | 2b. Application ports, instance keys, form guard, buyer use cases           | Next                  |
+|                                                        | 2c. Buyer pages: no-JS views, codes and phrase, QR, headers, copy lint      |                       |
+|                                                        | 2d. Vendor sign-in: passkeys, one-time-code fallback, sessions, audit       |                       |
+|                                                        | 2e. Vendor admin pages: waitlists, drops, settings, units                   |                       |
+|                                                        | 2f. Stage audit: accessibility, no-JS and hostile-input pass                |                       |
 | 3. Targets: Workers with D1, Node with SQLite          |                                                                             |                       |
 | 4. Redemption: WooCommerce connector, signed links     |                                                                             |                       |
 | 5. Public verifier                                     |                                                                             |                       |
@@ -105,3 +110,27 @@ Build steps for the first beta. Each stage ends with `pnpm check` green; then th
 - Trade-offs left open: the void count and
   commitment time come from the caller, so the verifier counts voids from the log and "timing unproven" must be shown
   plainly; the verifier should reject duplicate JSON keys in a downloaded log.
+
+## Stage 2a notes: waitlists and drops
+
+- A waitlist holds the allocation rule, whether places are forgotten after each drop and a neutral label. The rule and
+  the forgetting are fixed for its life; forgetting is allowed only under equal-chance-each-drop.
+- A drop moves draft → open → closed → committed → drawing → offering → finished, by a transition table. It can be
+  cancelled only before its commitment is published; a void keeps it committed.
+- Every drop setting has a change class. In a draft everything changes at once. Once open: the entrant cap and entry
+  window are fixed; the offer window (longer only), checkpoint interval and embed origins change after a published
+  24 h notice and a fresh sign-in; the unit count changes at once in public; page text, the webhook and results
+  retention change at once in the private audit. A finished or cancelled drop changes only the last group. One refused
+  setting refuses the whole submission.
+- Limits: entry window 24 h to 14 days, offer window 12 h to 5 days, checkpoints every 1 to 24 h and no further apart
+  than the offer window, up to 50,000 units and entrants, up to 10 embed origins, results kept 90 to 365 days.
+- Vendor text shown to buyers (label, page text) refuses gambling words in any inflection, after folding full-width
+  and invisible characters.
+- The settings digest covers the waitlist's lifelong settings and the drop's fixed ones;
+  `tests/vectors/settingsDigest.json` is computed independently with Python.
+- For the admin pages (2e): a lower unit count may withdraw free units only, which the use case checks against the
+  unit table; the settings form must show pending notice values, because a submission with after-notice changes
+  replaces the pending notice; embed origins are typed as origins, so the form normalises input such as a punycode host
+  first.
+- Payment settings (price, minimum payment, retire or return after a refund) arrive with redemption in step 4, and
+  the redemption route, duplicate flag and anchoring settings with the steps that build them, each with a change class.
