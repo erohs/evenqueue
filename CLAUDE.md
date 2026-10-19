@@ -29,11 +29,12 @@ Folders marked _(later)_ arrive in the step shown.
 src/
   domain/                  #domain: pure rules, no I/O, clock or randomness of its own; the verifier imports it
     shared/                only purpose-named helpers, moved here once a second area needs them
-      bytes/  validation/  ordering/
+      bytes/  validation/  ordering/  time/
     waitlist/              a buyer's place
     allocation-rules/      who is offered first, and what happens to a place after a drop
     draw/                  ordering a draw from public inputs: tiebreak key, ranking, slices
-    schedule/  offers/     windows, check-in times, offers, backfill            (later, 1b)
+    schedule/              windows measured in uptime, check-in times (checkpoints)
+    offers/                unit states, offers and backfill
     credentials/           buyer codes, delayed recovery                         (later, 1c)
     commitment/  beacon/   waitlist root, public draw ids, beacon rounds         (later, 1d)
     public-log/            hash chain                                            (later, 1e)
