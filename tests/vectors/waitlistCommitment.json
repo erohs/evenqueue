@@ -1,0 +1,63 @@
+{
+    "description": "Waitlist commitment. placeTag = SHA-256(\"evenqueue/place-tag/v1\" 0x00 || viewKey); publicDrawId = SHA-256(\"evenqueue/public-draw-id/v1\" 0x00 || placeTag || drawId); leaf = SHA-256(0x00 || publicDrawId || priority as int32 big-endian); node = SHA-256(0x01 || left || right), an odd last node moves up unchanged; leaves sorted by publicDrawId. View keys are those of buyerCodes.json. Computed independently with Python's standard library. The engine and the public verifier must reproduce every value.",
+    "drawId": "a872da4fdc0269ad9bdcae0f17904feb2db2ce2bdc0fc50e8bab6a59503ef268",
+    "places": [
+        {
+            "viewKey": "a23d01fd26888c2955fc0ca51cee9f7c",
+            "placeTag": "172ed7b8c694ce8b1d3e526caa0fe99cfeef3dbb7dfb4740c0515f04cc95da0e",
+            "publicDrawId": "f32322e4d6b59e4ed6a102efdc1445d4dd796c40ff224e59c39d36894ccfddbf"
+        },
+        {
+            "viewKey": "303b65b3704214100a5ecaf9ab72ea34",
+            "placeTag": "427d20340475e5df03d78f460d10ddcac8195539cba6fd7934061eea31a3f446",
+            "publicDrawId": "ee241f47c06b31befe7b69344cab725a04cb88130cceebb95a0940096be81bfd"
+        }
+    ],
+    "leaves": [
+        {
+            "publicDrawId": "f32322e4d6b59e4ed6a102efdc1445d4dd796c40ff224e59c39d36894ccfddbf",
+            "priority": 2
+        },
+        {
+            "publicDrawId": "ee241f47c06b31befe7b69344cab725a04cb88130cceebb95a0940096be81bfd",
+            "priority": 0
+        },
+        {
+            "publicDrawId": "4829049b569161dd6a6bbd7c9d84af22371a85cdd5ecae096d4f0577fda85b6a",
+            "priority": 1
+        },
+        {
+            "publicDrawId": "f7c65e4c43c09bb5828545ac826db59e40586ed1a13229a67868445bdb3e1160",
+            "priority": -3
+        },
+        {
+            "publicDrawId": "0d23d635370214b03cbdb2e01ecef4a287d22393d063f7e0da7110bfdbf2486f",
+            "priority": 2
+        }
+    ],
+    "leafHashesInOrder": [
+        "16cd400c0ce05ee9b008729c89599edf788c4418a4326e1c0c9c96fe368e88b1",
+        "189e0a47d72a185003ee699d13679ed1fe017afc5aa8ff06ce7bbf8073297d33",
+        "6307471e8098874cde87410474d2f4e1fa238ec98b215ac56766f97c16251b80",
+        "353fb99d59135927d8ffc46cc51ad4600af3e6afaaa3f4ef4853be56bf93dc2d",
+        "ee7243fe6d9cf6f4c24721d541a35e5f33c212f8e8e699b6424101f5a4a2881b"
+    ],
+    "committedWaitlistRoot": "9933063376792273f9d6459774d2ca94a48959ac3778d9ccab3287964d5c16e7",
+    "inclusionProof": {
+        "publicDrawId": "f32322e4d6b59e4ed6a102efdc1445d4dd796c40ff224e59c39d36894ccfddbf",
+        "steps": [
+            {
+                "siblingHash": "6307471e8098874cde87410474d2f4e1fa238ec98b215ac56766f97c16251b80",
+                "isSiblingOnLeft": true
+            },
+            {
+                "siblingHash": "0393c2e01664ef404204808a22309cffa07dbfa27f03cba03264467d0c60771b",
+                "isSiblingOnLeft": true
+            },
+            {
+                "siblingHash": "ee7243fe6d9cf6f4c24721d541a35e5f33c212f8e8e699b6424101f5a4a2881b",
+                "isSiblingOnLeft": false
+            }
+        ]
+    }
+}

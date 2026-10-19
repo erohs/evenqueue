@@ -24,6 +24,15 @@ group. Equal-chance-each-drop is kept for vendors who need newcomers to have ful
 verifier and the WooCommerce connector must reproduce it, so changing it means a new version tag and new test vectors,
 never an edit in place.
 
+## Public draw ids and the waitlist root have fixed, versioned layouts
+
+A place's tag is `SHA-256("evenqueue/place-tag/v1" 0x00 ‖ viewKey)`, taken from the view key it was first issued and
+kept through recovery, so the view key as well as the entry code can find the place in a published draw. Its public
+draw id is `SHA-256("evenqueue/public-draw-id/v1" 0x00 ‖ placeTag ‖ drawId)`. Leaves are
+`SHA-256(0x00 ‖ publicDrawId ‖ priority as int32 big-endian)`, sorted by public draw id; nodes are
+`SHA-256(0x01 ‖ left ‖ right)`, and an odd last node moves up unchanged. The public verifier must reproduce all of it, so a change means a new protocol version and
+new vectors.
+
 ## Node's built-in test runner
 
 The engine keeps zero runtime dependencies and as few development ones as possible, to keep yearly upkeep low, so it

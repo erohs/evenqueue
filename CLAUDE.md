@@ -36,7 +36,8 @@ src/
     schedule/              windows measured in uptime, check-in times (checkpoints)
     offers/                unit states, offers and backfill
     credentials/           buyer codes, delayed recovery
-    commitment/  beacon/   waitlist root, public draw ids, beacon rounds         (later, 1d)
+    commitment/            public draw ids, waitlist root, inclusion proofs, voids
+    beacon/                the pinned drand chain, round times, reading endpoints, waiting rules
     public-log/            hash chain                                            (later, 1e)
   application/             #application: one folder per thing a person or a timer does   (later, 2)
     ports/interfaces/      IWaitlistStore, IClock, IBeaconSource, IKeyStore, IRateLimiter

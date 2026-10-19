@@ -6,9 +6,9 @@ Build steps for the first beta. Each stage ends with `pnpm check` green; then th
 | ------------------------------------------------------ | --------------------------------------------------------------------------- | --------------------- |
 | 1. Engine core                                         | 1a. Scaffold, conventions, allocation rules, tiebreak key, ordering, slices | Done                  |
 |                                                        | 1b. Entry and offer windows, checkpoints, offers and backfill               | Done                  |
-|                                                        | 1c. Buyer codes and delayed recovery                                        | Done, awaiting review |
-|                                                        | 1d. Commitment (waitlist root, public draw ids) and beacon handling         | Next                  |
-|                                                        | 1e. Hash-chained public log                                                 |                       |
+|                                                        | 1c. Buyer codes and delayed recovery                                        | Done                  |
+|                                                        | 1d. Commitment (waitlist root, public draw ids) and beacon handling         | Done, awaiting review |
+|                                                        | 1e. Hash-chained public log                                                 | Next                  |
 | 2. Buyer pages and vendor admin                        |                                                                             |                       |
 | 3. Targets: Workers with D1, Node with SQLite          |                                                                             |                       |
 | 4. Redemption: WooCommerce connector, signed links     |                                                                             |                       |
@@ -49,3 +49,19 @@ Build steps for the first beta. Each stage ends with `pnpm check` green; then th
 - `tests/vectors/buyerCodes.json` is computed independently with Python's standard library.
 - The seven-word typed phrase moves to step 2: it needs a word list, and is tested against the code on the buyer
   pages.
+
+## Stage 1d notes
+
+- Each place has a fixed tag from its first view key, and a new public draw id every draw, so published lists cannot
+  be linked across draws while the entry code or view key can still find the place.
+- The commitment holds the root of a Merkle tree over `(public draw id, priority)` leaves, the counts by priority,
+  the settings digest, the protocol version and a quicknet round named at least 10 minutes ahead (by default the
+  first round six hours after commit, to leave time for a public timestamp of the root).
+- Beacon rounds are read by number only, from the pinned quicknet chain, and accepted only when the randomness is the
+  SHA-256 of the signature and at least two endpoints agree. A late round is waited for, with a delay notice after an
+  hour; a draw is voided only on a halt attested by two independent parties, at most twice, with the root frozen.
+- A draw counts as timing-proven only if the root was timestamped before the round existed.
+- `tests/vectors/waitlistCommitment.json` is computed independently with Python; `drandQuicknetRound1000000.json`
+  holds real responses from two drand endpoints.
+- Fetching from endpoints and timestamping the root are adapter work in step 3; the BLS signature check is in the
+  public verifier, step 5.
